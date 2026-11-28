@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Esquema Unifilar General Definitivo — SUB-01 (CGBT 400/230 V), GE-01 125 kVA, SAI-01, BAT-01 y PCI</title>
+  <title>Esquema Unifilar General Definitivo — SUB-01 / CGBT (400/230 V), GE-01 (125 kVA), SAI-01 (5 kVA), BAT-01 y PCI</title>
   <style>
     /* =========================================================================
        SISTEMA DE DISEÑO CORPORATIVO — INGENIERÍA ELÉCTRICA INDUSTRIAL (CSS PURO)
@@ -95,6 +95,7 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
+      flex: 1 1 560px;
     }
 
     .eyebrow-badge {
@@ -104,9 +105,9 @@
       width: fit-content;
       padding: 4px 11px;
       border-radius: 999px;
-      background: var(--blue-bg);
-      border: 1px solid var(--blue-bd);
-      color: var(--blue);
+      background: var(--green-bg);
+      border: 1px solid var(--green-bd);
+      color: var(--green-dark);
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 0.05em;
@@ -123,16 +124,16 @@
 
     .main-title {
       margin: 0;
-      font-size: clamp(18px, 2vw, 23px);
+      font-size: clamp(18px, 2vw, 22.5px);
       font-weight: 800;
       color: var(--navy);
       letter-spacing: -0.02em;
-      line-height: 1.2;
+      line-height: 1.22;
     }
 
     .main-subtitle {
       margin: 0;
-      font-size: 12.5px;
+      font-size: 12.4px;
       color: var(--text-body);
       font-weight: 500;
     }
@@ -240,4 +241,2204 @@
 
     .scenario-btn[data-scenario="normal"] .sc-dot { background: var(--blue); }
     .scenario-btn[data-scenario="fire"] .sc-dot { background: var(--red); }
-    .scenario-btn
+    .scenario-btn[data-scenario="fire-iga"] .sc-dot { background: var(--amber); }
+    .scenario-btn[data-scenario="blackout"] .sc-dot { background: var(--green); }
+
+    .scenario-btn:hover {
+      background: var(--bg-soft);
+      border-color: #94A3B8;
+    }
+
+    .scenario-btn.active[data-scenario="normal"] {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #FFFFFF;
+      box-shadow: 0 3px 10px rgba(15, 42, 95, 0.25);
+    }
+    .scenario-btn.active[data-scenario="normal"] .sc-dot { background: #60A5FA; }
+
+    .scenario-btn.active[data-scenario="fire"] {
+      background: var(--red-dark);
+      border-color: var(--red-dark);
+      color: #FFFFFF;
+      box-shadow: 0 3px 10px rgba(185, 28, 28, 0.28);
+    }
+    .scenario-btn.active[data-scenario="fire"] .sc-dot { background: #FCA5A5; }
+
+    .scenario-btn.active[data-scenario="fire-iga"] {
+      background: var(--amber-dark);
+      border-color: var(--amber-dark);
+      color: #FFFFFF;
+      box-shadow: 0 3px 10px rgba(180, 83, 9, 0.28);
+    }
+    .scenario-btn.active[data-scenario="fire-iga"] .sc-dot { background: #FDE68A; }
+
+    .scenario-btn.active[data-scenario="blackout"] {
+      background: var(--green-dark);
+      border-color: var(--green-dark);
+      color: #FFFFFF;
+      box-shadow: 0 3px 10px rgba(4, 120, 87, 0.28);
+    }
+    .scenario-btn.active[data-scenario="blackout"] .sc-dot { background: #6EE7B7; }
+
+    .inspect-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--blue);
+      background: var(--blue-bg);
+      border: 1px solid var(--blue-bd);
+      border-radius: 8px;
+      padding: 6px 11px;
+    }
+
+    /* =========================================================================
+       PANEL DE TELEMETRÍA EN TIEMPO REAL (4 TARJETAS KPI)
+       ========================================================================= */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--blue);
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .kpi-card.tone-blue { border-top-color: var(--blue); }
+    .kpi-card.tone-red { border-top-color: var(--red); background: #FFFCFC; }
+    .kpi-card.tone-amber { border-top-color: var(--amber); background: #FFFDF8; }
+    .kpi-card.tone-green { border-top-color: var(--green-dark); background: #F9FEFB; }
+    .kpi-card.tone-off { border-top-color: var(--off); background: #F8FAFC; }
+
+    .kpi-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    .kpi-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--navy);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+    }
+
+    .kpi-card.tone-red .kpi-value { color: var(--red-dark); }
+    .kpi-card.tone-amber .kpi-value { color: var(--amber-dark); }
+    .kpi-card.tone-green .kpi-value { color: var(--green-dark); }
+    .kpi-card.tone-off .kpi-value { color: #64748B; }
+
+    .kpi-meta {
+      margin-top: 4px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-body);
+    }
+
+    /* =========================================================================
+       CONTENEDOR DEL ESQUEMA UNIFILAR SVG
+       ========================================================================= */
+    .diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+    }
+
+    .svg-stage {
+      min-width: 1120px;
+      width: 100%;
+    }
+
+    #unifilar-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+    }
+
+    /* =========================================================================
+       BANNER EXPLICATIVO DINÁMICO Y LEYENDA
+       ========================================================================= */
+    .scenario-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--blue);
+      border-radius: var(--radius-md);
+      padding: 15px 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-left-color 0.25s ease;
+    }
+
+    .scenario-banner.tone-blue { border-left-color: var(--blue); }
+    .scenario-banner.tone-red { border-left-color: var(--red); }
+    .scenario-banner.tone-amber { border-left-color: var(--amber); }
+    .scenario-banner.tone-green { border-left-color: var(--green-dark); }
+
+    .banner-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .banner-title {
+      margin: 0;
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .norm-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .norm-pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-body);
+    }
+
+    .banner-body {
+      margin: 0;
+      font-size: 12.8px;
+      color: var(--text-body);
+      line-height: 1.55;
+    }
+
+    .legend-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 1px solid var(--border-light);
+    }
+
+    .legend-swatch {
+      width: 13px;
+      height: 13px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .legend-text strong {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.25;
+    }
+
+    .legend-text span {
+      display: block;
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.25;
+    }
+
+    /* =========================================================================
+       MODAL DE INSPECCIÓN TÉCNICA AL HACER CLIC EN BLOQUES DEL SVG
+       ========================================================================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-panel {
+      width: 100%;
+      max-width: 600px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.24);
+      overflow: hidden;
+      transform: translateY(10px) scale(0.98);
+      transition: transform 0.2s ease;
+    }
+
+    .modal-backdrop.open .modal-panel {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      color: #FFFFFF;
+      background: var(--navy);
+    }
+
+    .modal-header.tone-red { background: var(--red-dark); }
+    .modal-header.tone-amber { background: var(--amber-dark); }
+    .modal-header.tone-green { background: var(--green-dark); }
+
+    .modal-tag {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.88;
+      margin-bottom: 3px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 16.5px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .modal-close {
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: #FFFFFF;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .modal-body {
+      padding: 18px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 72vh;
+      overflow-y: auto;
+    }
+
+    .modal-summary {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-body);
+      line-height: 1.5;
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.3px;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .spec-table tr:nth-child(even) {
+      background: var(--bg-soft);
+    }
+
+    .spec-table td {
+      padding: 8.5px 11px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: top;
+    }
+
+    .spec-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .spec-table td:first-child {
+      font-weight: 700;
+      color: var(--navy);
+      width: 39%;
+    }
+
+    .spec-table td:last-child {
+      color: var(--text-body);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .modal-norm {
+      padding: 10px 13px;
+      border-radius: 8px;
+      background: var(--blue-bg);
+      border: 1px solid var(--blue-bd);
+      font-size: 11.8px;
+      color: var(--navy);
+      line-height: 1.45;
+    }
+
+    /* =========================================================================
+       NOTIFICACIÓN TOAST (SIN ALERT NI CONFIRM)
+       ========================================================================= */
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 1100;
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.25);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      opacity: 0;
+      transform: translateY(14px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #34D399;
+    }
+
+    /* =========================================================================
+       RESPONSIVIDAD E IMPRESIÓN LIMPIA (PDF HORIZONTAL)
+       ========================================================================= */
+    @media (max-width: 1100px) {
+      .telemetry-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .legend-bar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app-shell {
+        padding: 12px;
+      }
+      .telemetry-grid,
+      .legend-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      @page {
+        size: landscape;
+        margin: 8mm;
+      }
+      body {
+        background: #FFFFFF !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .app-shell {
+        max-width: 100%;
+        padding: 0;
+        gap: 10px;
+      }
+      .header-card, .kpi-card, .diagram-card, .scenario-banner, .legend-bar {
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+      .svg-stage {
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- ===================================================================== -->
+    <!-- CABECERA CORPORATIVA + SIMULADOR DE 4 ESCENARIOS + EXPORTACIÓN        -->
+    <!-- ===================================================================== -->
+    <header class="header-card">
+      <div class="header-top">
+        <div class="brand-group">
+          <div class="eyebrow-badge">
+            <span class="eyebrow-dot" aria-hidden="true"></span>
+            ESQUEMA UNIFILAR GENERAL DEFINITIVO · 6 / 6 SUBSISTEMAS CERRADOS
+          </div>
+          <h1 class="main-title">
+            SUB-01 / CGBT (400/230 V – 50 Hz), Transformador 400 kVA, GE-01 (125 kVA), SAI-01 (5 kVA), BAT-01 y PCI
+          </h1>
+          <p class="main-subtitle">
+            Planta de Servicios Auxiliares Industriales (AuxPltTarragona) · Esquema TN-S · Potencia Instalada CDPEs: 355,18 kW (362,31 kW total CGBT) · REBT (ITC-BT-19, 23, 28, 40, 44, 47), RIPCI y UNE 23500:2021
+          </p>
+        </div>
+
+        <div class="export-toolbar no-print">
+          <button id="btn-export-png" type="button" class="btn btn-primary" title="Descargar imagen PNG a doble resolución (2920×1930 px) del escenario actual">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            Descargar PNG (Alta Res. 2x)
+          </button>
+
+          <button id="btn-export-svg" type="button" class="btn" title="Descargar archivo vectorial SVG puro del escenario actual">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Descargar SVG
+          </button>
+
+          <button id="btn-print" type="button" class="btn" title="Imprimir o guardar en PDF en orientación horizontal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Imprimir / PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Simulador de Escenarios Operativos -->
+      <div class="simulator-bar no-print">
+        <div class="scenario-buttons" role="tablist" aria-label="Simulador de escenarios eléctricos">
+          <span class="sim-label">Simulador:</span>
+          <button type="button" class="scenario-btn active" data-scenario="normal" role="tab" aria-selected="true">
+            <span class="sc-dot" aria-hidden="true"></span>
+            1. Operación Normal
+          </button>
+          <button type="button" class="scenario-btn" data-scenario="fire" role="tab" aria-selected="false">
+            <span class="sc-dot" aria-hidden="true"></span>
+            2. Incendio (Red Activa)
+          </button>
+          <button type="button" class="scenario-btn" data-scenario="fire-iga" role="tab" aria-selected="false">
+            <span class="sc-dot" aria-hidden="true"></span>
+            3. Incendio + Corte IGA (Bomberos)
+          </button>
+          <button type="button" class="scenario-btn" data-scenario="blackout" role="tab" aria-selected="false">
+            <span class="sc-dot" aria-hidden="true"></span>
+            4. Apagón Total + Incendio
+          </button>
+        </div>
+
+        <div class="inspect-hint" aria-hidden="true">
+          <span>&#9432;</span> Clic en cualquier bloque del esquema para inspeccionar sus datos técnicos
+        </div>
+      </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- TELEMETRÍA EN TIEMPO REAL (4 TARJETAS KPI DINÁMICAS)                  -->
+    <!-- ===================================================================== -->
+    <section class="telemetry-grid" aria-label="Telemetría eléctrica del escenario activo">
+      <article id="kpi-trafo" class="kpi-card tone-blue">
+        <div class="kpi-label">Carga Transformador (400 kVA · SUB-01)</div>
+        <div id="kpi-trafo-val" class="kpi-value">109,08 kW · 128,3 kVA</div>
+        <div id="kpi-trafo-meta" class="kpi-meta">32,1 % carga · Red 20 kV activa · Tier 2 (99,34%)</div>
+      </article>
+
+      <article id="kpi-switch" class="kpi-card tone-blue">
+        <div class="kpi-label">Estado IGA (400 A) y ATS (250 A)</div>
+        <div id="kpi-switch-val" class="kpi-value">IGA Cerrado · ATS en Red (I)</div>
+        <div id="kpi-switch-meta" class="kpi-meta">Normal (44,78 kW + BAT-01) + Esencial (64,30 kW)</div>
+      </article>
+
+      <article id="kpi-ge" class="kpi-card tone-off">
+        <div class="kpi-label">Grupo Electrógeno (GE-01 · 125 kVA PRP)</div>
+        <div id="kpi-ge-val" class="kpi-value">En Espera Caliente (0,0 %)</div>
+        <div id="kpi-ge-meta" class="kpi-meta">GE-01 125 kVA PRP listo · Arranque &lt; 15 s</div>
+      </article>
+
+      <article id="kpi-pci" class="kpi-card tone-blue">
+        <div class="kpi-label">Extinción PCI Activa (UNE 23500)</div>
+        <div id="kpi-pci-val" class="kpi-value">Standby · Red Presurizada</div>
+        <div id="kpi-pci-meta" class="kpi-meta">P-602 Jockey (12,5–13,5 bar) · P-601/603 listas</div>
+      </article>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- ESQUEMA UNIFILAR INTERACTIVO SVG (viewBox 1460 × 965)                 -->
+    <!-- ===================================================================== -->
+    <main class="diagram-card">
+      <div class="svg-stage">
+        <svg
+          id="unifilar-svg"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1460 965"
+          role="img"
+          aria-label="Esquema unifilar general interactivo de SUB-01 / CGBT 400/230 V con Transformador 400 kVA Tier 2, SPD-01, BAT-01, derivación PCI P-601 aguas arriba del IGA, Grupo Electrógeno GE-01 125 kVA con ATS, Embarrados Normal y Esencial y SAI-01 de 5 kVA"
+        >
+          <defs>
+            <!-- Sombra sutil para tarjetas -->
+            <filter id="sh" x="-4%" y="-4%" width="108%" height="114%">
+              <feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#0F172A" flood-opacity="0.07" />
+            </filter>
+
+            <!-- Flechas semánticas -->
+            <marker id="arr-blue" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#1D4ED8" />
+            </marker>
+            <marker id="arr-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#DC2626" />
+            </marker>
+            <marker id="arr-amber" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#D97706" />
+            </marker>
+            <marker id="arr-green" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#047857" />
+            </marker>
+            <marker id="arr-off" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#94A3B8" />
+            </marker>
+
+            <!-- Estilos embebidos dentro del SVG para fidelidad total en descarga SVG/PNG -->
+            <style>
+              .f { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; }
+              .b8 { font-weight: 800; }
+              .b7 { font-weight: 700; }
+              .b6 { font-weight: 600; }
+              .b5 { font-weight: 500; }
+              .b4 { font-weight: 400; }
+
+              .clickable { cursor: pointer; transition: opacity 0.25s ease, filter 0.2s ease; }
+              .clickable:hover { filter: drop-shadow(0 0 5px rgba(29, 78, 216, 0.26)); }
+
+              .branch { transition: opacity 0.28s ease, filter 0.28s ease; }
+              .is-off { opacity: 0.34; filter: grayscale(88%); }
+              .is-standby { opacity: 0.78; }
+
+              /* Flujo animado de energía en líneas energizadas */
+              .flow-line {
+                fill: none;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-dasharray: 9 7;
+                opacity: 0;
+                pointer-events: none;
+              }
+              .flow-line.active {
+                opacity: 0.95;
+                animation: dashFlow 0.85s linear infinite;
+              }
+              @keyframes dashFlow {
+                from { stroke-dashoffset: 32; }
+                to { stroke-dashoffset: 0; }
+              }
+
+              /* Pulso en insignias de bomba PCI o GE en marcha */
+              .pulse-badge {
+                animation: badgePulse 1.35s ease-in-out infinite;
+              }
+              @keyframes badgePulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.58; }
+              }
+
+              /* Transición suave en cuchillas de IGA y ATS */
+              .switch-arm {
+                transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), stroke 0.25s ease;
+              }
+            </style>
+          </defs>
+
+          <!-- Fondo blanco sólido (necesario para exportación PNG limpia) -->
+          <rect x="0" y="0" width="1460" height="965" fill="#FFFFFF" rx="8" />
+
+          <!-- =============================================================== -->
+          <!-- MARCO ENVOLVENTE DEL CGBT (SUB-01)                              -->
+          <!-- =============================================================== -->
+          <g id="cgbt-shell">
+            <rect x="324" y="246" width="1120" height="704" rx="14" fill="#F8FAFC" stroke="#64748B" stroke-width="1.8" stroke-dasharray="8 5" />
+            <rect x="338" y="234" width="568" height="24" rx="6" fill="#0F2A5F" />
+            <text x="350" y="250" class="f b8" font-size="10.8" fill="#FFFFFF" letter-spacing="0.35">
+              SUB-01 · CGBT — CUADRO GENERAL DE BAJA TENSIÓN (400/230 V · 50 Hz · TN-S)
+            </text>
+            <!-- Separador interno entre Zona Embarrado Normal y Zona Embarrado Esencial/SAI -->
+            <line x1="944" y1="376" x2="944" y2="938" stroke="#CBD5E1" stroke-width="1.4" stroke-dasharray="5 4" />
+          </g>
+
+          <!-- =============================================================== -->
+          <!-- 1. CABECERA MT/BT Y TRANSFORMADOR 400 kVA (SUB-01)              -->
+          <!-- =============================================================== -->
+          <g id="grp-grid" class="branch">
+            <!-- Llegada RED MT -->
+            <rect id="grid-pill-bg" x="378" y="10" width="244" height="25" rx="12.5" fill="#0F2A5F" filter="url(#sh)" />
+            <text id="grid-pill-txt" x="500" y="26.5" text-anchor="middle" class="f b8" font-size="10.8" fill="#FFFFFF" letter-spacing="0.3">
+              RED EXTERIOR MT (20 kV · 50 Hz)
+            </text>
+
+            <!-- Bajada MT + Seccionador QS-MT / QF-MT -->
+            <line x1="500" y1="35" x2="500" y2="50" stroke="#0F2A5F" stroke-width="3" />
+            <line x1="494" y1="50" x2="506" y2="50" stroke="#0F2A5F" stroke-width="2.4" />
+            <line x1="500" y1="50" x2="492" y2="71" stroke="#0F2A5F" stroke-width="2.5" stroke-linecap="round" />
+            <circle cx="500" cy="73" r="3" fill="#0F2A5F" />
+            <text x="480" y="59" text-anchor="end" class="f b8" font-size="9.8" fill="#0F2A5F">QS-MT / QF-MT</text>
+            <text x="480" y="72" text-anchor="end" class="f b6" font-size="8.7" fill="#64748B">Celda MT 20 kV · APR + DGPT2</text>
+            <line x1="500" y1="76" x2="500" y2="88" stroke="#0F2A5F" stroke-width="3" />
+
+            <!-- Bloque clickeable TRANSFORMADOR MT/BT 400 kVA -->
+            <g class="clickable" data-inspect="trafo">
+              <!-- Símbolo IEC Transformador de dos devanados Dyn11 -->
+              <circle cx="500" cy="108" r="20" fill="#FFFFFF" stroke="#0F2A5F" stroke-width="2.6" />
+              <circle cx="500" cy="134" r="20" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2.6" />
+              <!-- Triángulo Δ primario -->
+              <polygon points="500,96 492,110 508,110" fill="none" stroke="#0F2A5F" stroke-width="1.8" stroke-linejoin="round" />
+              <!-- Estrella Y secundario -->
+              <line x1="500" y1="135" x2="500" y2="146" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="500" y1="135" x2="492" y2="127" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="500" y1="135" x2="508" y2="127" stroke="#1D4ED8" stroke-width="1.8" />
+
+              <!-- Puesta a tierra del neutro (Esquema TN-S) -->
+              <line x1="520" y1="134" x2="540" y2="134" stroke="#047857" stroke-width="2" />
+              <line x1="540" y1="134" x2="540" y2="149" stroke="#047857" stroke-width="2" />
+              <line x1="531" y1="149" x2="549" y2="149" stroke="#047857" stroke-width="2" />
+              <line x1="534" y1="154" x2="546" y2="154" stroke="#047857" stroke-width="1.8" />
+              <line x1="537" y1="159" x2="543" y2="159" stroke="#047857" stroke-width="1.6" />
+              <text x="540" y="170" text-anchor="middle" class="f b8" font-size="8.5" fill="#047857">TN-S</text>
+
+              <!-- Tarjeta técnica SUB-01 Transformador 400 kVA Tier 2 -->
+              <rect x="562" y="42" width="352" height="136" rx="10" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="1.5" filter="url(#sh)" />
+              <rect x="562" y="42" width="5" height="136" rx="2.5" fill="#0F2A5F" />
+              <text x="576" y="60" class="f b8" font-size="10.2" fill="#0F2A5F">SUB-01 · TRANSFORMADOR MT/BT · 400 kVA</text>
+              <rect id="svg-trafo-badge-bg" x="808" y="47" width="98" height="18" rx="9" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1" />
+              <text id="svg-trafo-badge-txt" x="857" y="59.5" text-anchor="middle" class="f b8" font-size="8.8" fill="#1D4ED8">32,1 % CARGA</text>
+
+              <text x="576" y="77" class="f b6" font-size="9.1" fill="#334155">20 kV / 400 V · Dyn11 · In = 577,4 A · ucc = 4% · Tier 2</text>
+              <text x="576" y="92" class="f b6" font-size="8.9" fill="#047857">P₀ ≤ 387 W · η = 99,34% · Prot. térmica integral DGPT2</text>
+              <text x="576" y="108" class="f b5" font-size="9.1" fill="#475569">Normal: 109,08 kW (128,3 kVA · 32,1%)</text>
+              <text x="576" y="123" class="f b7" font-size="8.9" fill="#B91C1C">Incendio (+P-601): 255,75 kW (300,9 kVA · 75,2%)</text>
+              <text x="576" y="137" class="f b6" font-size="8.6" fill="#DC2626">ΔU arr. P-601: 5,9% barras / 7,7% motor (lím. ≤ 15%)</text>
+              <line x1="576" y1="145" x2="904" y2="145" stroke="#E2E8F0" stroke-width="1" />
+              <text x="576" y="158" class="f b7" font-size="8.8" fill="#0F2A5F">Total Instalada CDPEs S1–S6: 355,18 kW</text>
+              <text x="576" y="171" class="f b5" font-size="8.4" fill="#64748B">(362,31 kW total CGBT incl. SAI-01 / PCI / Aux.)</text>
+            </g>
+
+            <!-- Bajada desde secundario del Trafo hasta nodo derivación PCI -->
+            <line x1="500" y1="154" x2="500" y2="206" stroke="#0F2A5F" stroke-width="4" />
+            <path id="flow-trafo-tap" class="flow-line active" d="M 500 156 L 500 204" stroke="#60A5FA" stroke-width="2.6" />
+
+            <!-- NODO PUNTO DE DERIVACIÓN AGUAS ARRIBA DEL IGA -->
+            <circle cx="500" cy="206" r="7" fill="#DC2626" stroke="#FFFFFF" stroke-width="2" />
+
+            <!-- Rótulo obligatorio AGUAS ARRIBA DEL IGA -->
+            <rect x="518" y="189" width="396" height="30" rx="6" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.3" />
+            <text x="716" y="208" text-anchor="middle" class="f b8" font-size="10.2" fill="#B91C1C" letter-spacing="0.2">
+              AGUAS ARRIBA DEL IGA · NO DESCONECTAR EN CASO DE INCENDIO
+            </text>
+          </g>
+
+          <!-- =============================================================== -->
+          <!-- 2. NIVEL 0 — DERIVACIÓN PCI INDEPENDIENTE (P-601 + P-603)       -->
+          <!-- =============================================================== -->
+          <g id="grp-pci-elec" class="branch">
+            <!-- Línea horizontal desde arriba del IGA hacia Nivel 0 -->
+            <path d="M 493 206 L 161 206 L 161 240" fill="none" stroke="#DC2626" stroke-width="3.6" marker-end="url(#arr-red)" />
+            <path id="flow-pci" class="flow-line" d="M 493 206 L 161 206 L 161 510" stroke="#FCA5A5" stroke-width="2.5" />
+
+            <!-- Etiqueta de cable resistente al fuego -->
+            <rect x="174" y="170" width="306" height="28" rx="6" fill="#FFF5F5" stroke="#FECACA" stroke-width="1.1" />
+            <text x="327" y="182" text-anchor="middle" class="f b8" font-size="9.5" fill="#B91C1C">
+              Cable Resistente al Fuego SZ1-K (AS+) PH120
+            </text>
+            <text x="327" y="194" text-anchor="middle" class="f b6" font-size="8.8" fill="#7F1D1D">
+              Acometida 1,15·In (283,1 A) / Motor 1,25·In (307,7 A)
+            </text>
+
+            <!-- Caja contenedora NIVEL 0 -->
+            <rect x="16" y="242" width="290" height="708" rx="14" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="7 4" />
+            <rect x="28" y="252" width="266" height="24" rx="6" fill="#B91C1C" />
+            <text x="161" y="268" text-anchor="middle" class="f b8" font-size="10.8" fill="#FFFFFF" letter-spacing="0.3">
+              NIVEL 0 · DERIVACIÓN PCI (UNE 23500)
+            </text>
+
+            <!-- Interruptor SOLO MAGNÉTICO QF-PCI -->
+            <line x1="161" y1="276" x2="161" y2="292" stroke="#DC2626" stroke-width="2.8" />
+            <line x1="156" y1="288" x2="166" y2="298" stroke="#DC2626" stroke-width="2" />
+            <line x1="166" y1="288" x2="156" y2="298" stroke="#DC2626" stroke-width="2" />
+            <line x1="161" y1="293" x2="161" y2="324" stroke="#DC2626" stroke-width="2.8" />
+            <circle cx="161" cy="324" r="3" fill="#DC2626" />
+            <line x1="161" y1="308" x2="177" y2="308" stroke="#DC2626" stroke-width="1.3" stroke-dasharray="2 2" />
+            <rect x="177" y="298" width="38" height="19" rx="4" fill="#FFFFFF" stroke="#DC2626" stroke-width="1.4" />
+            <text x="196" y="311" text-anchor="middle" class="f b8" font-size="10" fill="#DC2626">I&gt;&gt;</text>
+            <text x="148" y="311" text-anchor="end" class="f b8" font-size="10" fill="#991B1B">QF-PCI</text>
+
+            <!-- Tarjeta protección QF-PCI -->
+            <line x1="161" y1="327" x2="161" y2="338" stroke="#DC2626" stroke-width="2.6" />
+            <rect x="28" y="338" width="266" height="52" rx="8" fill="#FFFFFF" stroke="#FCA5A5" stroke-width="1.3" filter="url(#sh)" />
+            <text x="161" y="354" text-anchor="middle" class="f b8" font-size="10" fill="#991B1B">
+              Interruptor Solo Magnético · 14·In (≈ 3.446 A)
+            </text>
+            <text x="161" y="368" text-anchor="middle" class="f b6" font-size="9.1" fill="#334155">
+              Sin disparo térmico (solo alarma) · UNE 23500:2021
+            </text>
+            <text x="161" y="382" text-anchor="middle" class="f b5" font-size="8.7" fill="#64748B">
+              Soporta pico arranque 20 s · Independiente del IGA
+            </text>
+
+            <!-- Bajada a Cuadro Homologado PCI -->
+            <line x1="161" y1="390" x2="161" y2="408" stroke="#DC2626" stroke-width="2.6" marker-end="url(#arr-red)" />
+
+            <!-- Cuadro Homologado PCI -->
+            <rect x="28" y="412" width="266" height="84" rx="9" fill="#FFFFFF" stroke="#DC2626" stroke-width="1.5" filter="url(#sh)" />
+            <rect x="28" y="412" width="266" height="21" rx="8" fill="#FEE2E2" />
+            <text x="161" y="426" text-anchor="middle" class="f b8" font-size="10" fill="#991B1B">
+              CUADRO HOMOLOGADO PCI (UNE 23500)
+            </text>
+            <text x="38" y="447" class="f b6" font-size="9.2" fill="#0F172A">• Arranque suave (~3·In ≈ 739 A) · Motor S1</text>
+            <text x="38" y="462" class="f b6" font-size="9.2" fill="#0F172A">• Presostatos cableados PSL-611A/B (11,5 bar)</text>
+            <text x="38" y="477" class="f b5" font-size="9" fill="#475569">• Parada exclusivamente manual en cuadro local</text>
+            <text x="38" y="490" class="f b5" font-size="8.4" fill="#64748B">• Sin dependencia de DCS ni SAI-01 de proceso</text>
+
+            <!-- Bajada a Motor P-601 -->
+            <line x1="161" y1="496" x2="161" y2="514" stroke="#DC2626" stroke-width="2.8" marker-end="url(#arr-red)" />
+
+            <!-- Bloque clickeable BOMBA ELÉCTRICA P-601 -->
+            <g class="clickable" data-inspect="p601">
+              <rect id="p601-card" x="28" y="518" width="266" height="162" rx="10" fill="#FFFFFF" stroke="#DC2626" stroke-width="1.6" filter="url(#sh)" />
+              <!-- Badge dinámico estado P-601 -->
+              <rect id="p601-badge-bg" x="96" y="527" width="186" height="20" rx="10" fill="#FEF2F2" stroke="#FCA5A5" stroke-width="1" />
+              <text id="p601-badge-txt" x="189" y="540.5" text-anchor="middle" class="f b8" font-size="9.2" fill="#B91C1C">
+                EN ESPERA (11,5 bar)
+              </text>
+
+              <!-- Símbolo IEC Motor Trifásico M 3~ -->
+              <circle id="p601-motor-circle" cx="62" cy="570" r="24" fill="#FFF5F5" stroke="#DC2626" stroke-width="2.4" />
+              <text x="62" y="570" text-anchor="middle" class="f b8" font-size="15" fill="#B91C1C">M</text>
+              <text x="62" y="584" text-anchor="middle" class="f b7" font-size="10" fill="#DC2626">3~</text>
+
+              <text x="96" y="566" class="f b8" font-size="11.4" fill="#991B1B">P-601 · Bomba PCI Eléctrica</text>
+              <text x="96" y="583" class="f b8" font-size="10.4" fill="#DC2626">132 kW IEC / 146,67 kW elec.</text>
+              <text x="96" y="599" class="f b6" font-size="9.3" fill="#334155">170,5 kVA · In = 246,2 A</text>
+
+              <line x1="40" y1="612" x2="282" y2="612" stroke="#FEE2E2" stroke-width="1" />
+              <text x="161" y="628" text-anchor="middle" class="f b6" font-size="9.3" fill="#334155">
+                200 m³/h @ 12 bar · 400 V 3F · Servicio S1
+              </text>
+              <text x="161" y="645" text-anchor="middle" class="f b6" font-size="8.8" fill="#475569">
+                Arranque suave (~3·In) · ΔU = 5,9% barras / 7,7% motor
+              </text>
+              <text x="161" y="664" text-anchor="middle" class="f b7" font-size="9" fill="#B91C1C">
+                Régimen Emergencia (E) · 0,00 kW normal
+              </text>
+            </g>
+          </g>
+
+          <!-- Bloque adyacente P-603 BOMBA DIÉSEL AUTÓNOMA (Respaldo Mecánico 1+1) -->
+          <g id="grp-p603" class="branch">
+            <!-- Enlace mecánico de respaldo 1+1 -->
+            <line x1="161" y1="680" x2="161" y2="726" stroke="#047857" stroke-width="2.4" stroke-dasharray="4 3" marker-end="url(#arr-green)" />
+            <path id="flow-p603" class="flow-line" d="M 161 682 L 161 726" stroke="#10B981" stroke-width="3" />
+            <rect x="83" y="692" width="156" height="19" rx="9.5" fill="#ECFDF5" stroke="#6EE7B7" stroke-width="1" />
+            <text x="161" y="704.5" text-anchor="middle" class="f b8" font-size="8.8" fill="#047857">
+              Respaldo 1+1 · UNE 23500 Tipo C
+            </text>
+
+            <!-- Tarjeta clickeable P-603 -->
+            <g class="clickable" data-inspect="p603">
+              <rect id="p603-card" x="28" y="732" width="266" height="204" rx="10" fill="#ECFDF5" stroke="#047857" stroke-width="1.8" filter="url(#sh)" />
+              <rect id="p603-badge-bg" x="40" y="742" width="242" height="22" rx="11" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.2" />
+              <text id="p603-badge-txt" x="161" y="756.5" text-anchor="middle" class="f b8" font-size="9.2" fill="#047857">
+                RESERVA AUTOMÁTICA (11,0 bar)
+              </text>
+
+              <!-- Símbolo Motor Diésel Autónomo -->
+              <circle id="p603-circle" cx="62" cy="798" r="23" fill="#FFFFFF" stroke="#047857" stroke-width="2.3" />
+              <text x="62" y="803" text-anchor="middle" class="f b8" font-size="14.5" fill="#047857">D</text>
+
+              <text x="94" y="790" class="f b8" font-size="11.3" fill="#065F46">P-603 · Bomba Diésel</text>
+              <text x="94" y="807" class="f b8" font-size="10.3" fill="#047857">130–140 kW mec. (100%)</text>
+              <text x="94" y="823" class="f b6" font-size="9.3" fill="#334155">200 m³/h @ 12 bar · Autónoma</text>
+
+              <line x1="40" y1="836" x2="282" y2="836" stroke="#A7F3D0" stroke-width="1" />
+              <text x="161" y="854" text-anchor="middle" class="f b6" font-size="9.2" fill="#065F46">
+                100% autónoma por gasóleo + doble batería
+              </text>
+              <text x="161" y="871" text-anchor="middle" class="f b6" font-size="9.2" fill="#334155">
+                Arranque cableado PSL-613A/B (11,0 bar)
+              </text>
+              <text x="161" y="888" text-anchor="middle" class="f b5" font-size="8.9" fill="#475569">
+                No requiere red exterior ni GE-01 para extinguir
+              </text>
+              <rect x="42" y="902" width="238" height="22" rx="5" fill="#FFFFFF" stroke="#A7F3D0" stroke-width="1" />
+              <text x="161" y="916.5" text-anchor="middle" class="f b7" font-size="8.8" fill="#B45309">
+                Auxiliares (2,00 kW) desde Barra Esencial →
+              </text>
+            </g>
+          </g>
+
+          <!-- =============================================================== -->
+          <!-- 3. INTERRUPTOR GENERAL AUTOMÁTICO (IGA 400 A · 4P)              -->
+          <!-- =============================================================== -->
+          <g id="grp-iga" class="branch clickable" data-inspect="iga">
+            <!-- Bajada desde punto derivación PCI hasta borne superior del IGA -->
+            <line id="line-tap-iga" x1="500" y1="213" x2="500" y2="288" stroke="#0F2A5F" stroke-width="4" />
+            <path id="flow-tap-iga" class="flow-line active" d="M 500 215 L 500 286" stroke="#60A5FA" stroke-width="2.5" />
+
+            <!-- Símbolo IEC Interruptor Automático IGA (con cuchilla dinámica) -->
+            <line x1="494" y1="283" x2="506" y2="295" stroke="#0F2A5F" stroke-width="2.3" />
+            <line x1="506" y1="283" x2="494" y2="295" stroke="#0F2A5F" stroke-width="2.3" />
+            <circle cx="500" cy="289" r="3.2" fill="#0F2A5F" />
+            <!-- Cuchilla móvil: pivota desde (500, 335) -->
+            <line
+              id="iga-blade"
+              class="switch-arm"
+              x1="500" y1="335" x2="500" y2="289"
+              stroke="#0F2A5F" stroke-width="3.6" stroke-linecap="round"
+              style="transform-origin: 500px 335px;"
+            />
+            <circle cx="500" cy="335" r="3.8" fill="#0F2A5F" />
+            <!-- Símbolo disparo magnetotérmico -->
+            <rect x="460" y="302" width="24" height="19" rx="4" fill="#FFFFFF" stroke="#0F2A5F" stroke-width="1.3" />
+            <text x="472" y="315" text-anchor="middle" class="f b8" font-size="9" fill="#0F2A5F">I&gt;</text>
+
+            <!-- Tarjeta informativa del IGA -->
+            <rect id="iga-card" x="520" y="276" width="290" height="66" rx="9" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="1.5" filter="url(#sh)" />
+            <text x="532" y="294" class="f b8" font-size="11.5" fill="#0F2A5F">IGA · 400 A (4P)</text>
+            <rect id="iga-badge-bg" x="674" y="281" width="126" height="18" rx="9" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1" />
+            <text id="iga-badge-txt" x="737" y="293.5" text-anchor="middle" class="f b8" font-size="9" fill="#1D4ED8">CERRADO · ACTIVO</text>
+            <text x="532" y="313" class="f b5" font-size="9.4" fill="#475569">Interruptor General Automático (Icu ≥ 25 kA)</text>
+            <text x="532" y="328" class="f b6" font-size="9.1" fill="#B91C1C">Aguas abajo de P-601 · Corte seguro de planta</text>
+          </g>
+
+          <!-- Bajada desde salida IGA hasta Embarrado Normal + SPD-01 (Tipo 1+2) -->
+          <g id="grp-iga-downstream" class="branch">
+            <line x1="500" y1="339" x2="500" y2="412" stroke="#1D4ED8" stroke-width="4" />
+            <path id="flow-iga-normal" class="flow-line active" d="M 500 341 L 500 410" stroke="#93C5FD" stroke-width="2.5" />
+            <circle cx="500" cy="412" r="4.8" fill="#1D4ED8" />
+
+            <!-- Derivación y bloque SPD-01 (Protección contra Sobretensiones Tipo 1+2 · 4P) -->
+            <circle cx="500" cy="352" r="3.8" fill="#1D4ED8" />
+            <line x1="500" y1="352" x2="448" y2="352" stroke="#1D4ED8" stroke-width="2.4" />
+            <g class="clickable" data-inspect="spd">
+              <rect x="336" y="276" width="112" height="96" rx="8" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.4" filter="url(#sh)" />
+              <rect x="336" y="276" width="112" height="20" rx="7" fill="#1D4ED8" />
+              <text x="392" y="289.5" text-anchor="middle" class="f b8" font-size="8.8" fill="#FFFFFF">SPD-01 · TIPO 1+2</text>
+
+              <!-- Símbolo IEC Descargador de Sobretensiones + PE TN-S -->
+              <rect x="346" y="303" width="24" height="22" rx="3" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="1.4" />
+              <polyline points="359,306 353,314 361,314 356,322" fill="none" stroke="#1D4ED8" stroke-width="1.5" stroke-linejoin="round" />
+              <line x1="358" y1="325" x2="358" y2="333" stroke="#047857" stroke-width="1.5" />
+              <line x1="351" y1="333" x2="365" y2="333" stroke="#047857" stroke-width="1.5" />
+              <line x1="354" y1="336.5" x2="362" y2="336.5" stroke="#047857" stroke-width="1.3" />
+              <line x1="356" y1="340" x2="360" y2="340" stroke="#047857" stroke-width="1.1" />
+
+              <text x="378" y="313" class="f b8" font-size="8.6" fill="#0F2A5F">Clase I+II · 4P</text>
+              <text x="378" y="326" class="f b7" font-size="8.4" fill="#1D4ED8">Up ≤ 1,5 kV</text>
+              <text x="378" y="338" class="f b6" font-size="7.8" fill="#047857">PE TN-S</text>
+
+              <line x1="344" y1="346" x2="440" y2="346" stroke="#E2E8F0" stroke-width="1" />
+              <text x="392" y="357" text-anchor="middle" class="f b6" font-size="7.9" fill="#334155">Desconexión coord.</text>
+              <text x="392" y="367.5" text-anchor="middle" class="f b5" font-size="7.6" fill="#64748B">REBT ITC-BT-23</text>
+            </g>
+          </g>
+
+          <g id="grp-coupling" class="branch">
+            <!-- Derivación desde aguas abajo del IGA hacia entrada I (RED) del ATS -->
+            <circle cx="500" cy="364" r="4.2" fill="#1D4ED8" />
+            <path d="M 500 364 L 842 364 L 842 320 L 994 320" fill="none" stroke="#1D4ED8" stroke-width="3.2" marker-end="url(#arr-blue)" />
+            <path id="flow-red-ats" class="flow-line active" d="M 500 364 L 842 364 L 842 320 L 990 320" stroke="#93C5FD" stroke-width="2.2" />
+            <!-- Seccionador de enlace Q-ACOP -->
+            <rect x="866" y="305" width="94" height="30" rx="6" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.2" filter="url(#sh)" />
+            <text x="913" y="318" text-anchor="middle" class="f b8" font-size="9.2" fill="#0F2A5F">Q-ACOP (4P)</text>
+            <text x="913" y="329" text-anchor="middle" class="f b5" font-size="8.3" fill="#475569">Enlace Red → ATS</text>
+          </g>
+
+          <!-- =============================================================== -->
+          <!-- 4. NIVEL 2 — EMBARRADO NORMAL (SOLO RED EXTERIOR) + BAT-01      -->
+          <!-- =============================================================== -->
+          <g id="grp-normal" class="branch">
+            <!-- Cabecera clickeable del Embarrado Normal -->
+            <g class="clickable" data-inspect="normal">
+              <rect x="518" y="378" width="404" height="24" rx="6" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.3" />
+              <text x="720" y="394" text-anchor="middle" class="f b8" font-size="10.2" fill="#0F2A5F">
+                NIVEL 2 · EMBARRADO NORMAL · 96,34 kW inst. / 44,78 kW dem.
+              </text>
+              <!-- Barra principal azul -->
+              <line x1="336" y1="412" x2="932" y2="412" stroke="#1D4ED8" stroke-width="7.5" stroke-linecap="round" />
+              <path id="flow-bus-normal" class="flow-line active" d="M 342 412 L 926 412" stroke="#DBEAFE" stroke-width="2.5" />
+            </g>
+
+            <!-- ===== SALIDA BAT: Batería de Condensadores BAT-01 (x = 340 -> Canal Izq -> Fila 3) ===== -->
+            <g class="clickable" data-inspect="bat">
+              <circle cx="340" cy="412" r="3.6" fill="#0F2A5F" />
+              <line x1="340" y1="412" x2="340" y2="438" stroke="#1D4ED8" stroke-width="2.3" />
+              <line x1="336" y1="434" x2="344" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="344" y1="434" x2="336" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="340" y1="438" x2="333" y2="460" stroke="#1D4ED8" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="340" cy="462" r="2.6" fill="#1D4ED8" />
+              <text x="349" y="454" class="f b8" font-size="8.8" fill="#0F2A5F">QF-BAT</text>
+              <text x="349" y="465" class="f b6" font-size="7.8" fill="#64748B">100 A 3P</text>
+              <path d="M 340 465 L 340 902 L 352 902" fill="none" stroke="#1D4ED8" stroke-width="2.3" marker-end="url(#arr-blue)" />
+
+              <!-- Tarjeta horizontal BAT-01 -->
+              <rect x="356" y="868" width="560" height="68" rx="9" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.5" filter="url(#sh)" />
+              <rect x="356" y="868" width="5" height="68" rx="2.5" fill="#1D4ED8" />
+
+              <!-- Símbolo IEC Condensador Trifásico -->
+              <rect x="372" y="881" width="42" height="42" rx="7" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.2" />
+              <line x1="393" y1="886" x2="393" y2="897" stroke="#0F2A5F" stroke-width="2" />
+              <line x1="382" y1="897" x2="404" y2="897" stroke="#0F2A5F" stroke-width="2.5" />
+              <line x1="382" y1="905" x2="404" y2="905" stroke="#1D4ED8" stroke-width="2.5" />
+              <line x1="393" y1="905" x2="393" y2="917" stroke="#1D4ED8" stroke-width="2" />
+
+              <text x="426" y="888" class="f b8" font-size="9.5" fill="#0F2A5F">
+                BAT-01 · BATERÍA AUTOMÁTICA DE CONDENSADORES (40 kVAr · 4×10 kVAr)
+              </text>
+              <rect x="798" y="875" width="108" height="18" rx="9" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1" />
+              <text x="852" y="887" text-anchor="middle" class="f b8" font-size="8.4" fill="#047857">cos φ 0,85 → ≥ 0,95</text>
+
+              <text x="426" y="906" class="f b6" font-size="9" fill="#334155">
+                QF-BAT: MCCB 100 A (3P) · Cable RZ1-K 3×25+T16 (In = 57,7 A · 1,5·In = 86,6 A · REBT ITC-BT-44)
+              </text>
+              <text x="426" y="923" class="f b5" font-size="8.7" fill="#64748B">
+                Reactancias de rechazo 7% (filtro armónicos VFD) · Compensación Qc = 31,75 kVAr (Circular CNMC 3/2020)
+              </text>
+            </g>
+
+            <!-- ===== SALIDA 1: S1 Captación (x = 440 -> Fila 1 Col 1) ===== -->
+            <g class="clickable" data-inspect="normal">
+              <circle cx="440" cy="412" r="3.6" fill="#0F2A5F" />
+              <line x1="440" y1="412" x2="440" y2="438" stroke="#1D4ED8" stroke-width="2.3" />
+              <line x1="436" y1="434" x2="444" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="444" y1="434" x2="436" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="440" y1="438" x2="433" y2="460" stroke="#1D4ED8" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="440" cy="462" r="2.6" fill="#1D4ED8" />
+              <text x="450" y="454" class="f b8" font-size="9.2" fill="#0F2A5F">QF-S1</text>
+              <line x1="440" y1="465" x2="440" y2="488" stroke="#1D4ED8" stroke-width="2.3" marker-end="url(#arr-blue)" />
+
+              <rect x="356" y="492" width="168" height="156" rx="9" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="1.4" filter="url(#sh)" />
+              <rect x="356" y="492" width="168" height="24" rx="8" fill="#0F2A5F" />
+              <text x="440" y="508" text-anchor="middle" class="f b8" font-size="10.2" fill="#FFFFFF">S1 · Captación</text>
+              <text x="440" y="533" text-anchor="middle" class="f b7" font-size="9.3" fill="#0F172A">P-101A/B (1+1) · VFD</text>
+              <text x="440" y="548" text-anchor="middle" class="f b5" font-size="9" fill="#475569">FL-101 · LV-101 · AT-112</text>
+              <text x="440" y="563" text-anchor="middle" class="f b5" font-size="8.8" fill="#64748B">400/230 V · Agua servicio</text>
+              <line x1="368" y1="574" x2="512" y2="574" stroke="#E2E8F0" stroke-width="1" />
+              <text x="440" y="591" text-anchor="middle" class="f b8" font-size="9.8" fill="#1D4ED8">26,05 kW inst.</text>
+              <text x="440" y="607" text-anchor="middle" class="f b8" font-size="9.8" fill="#047857">10,98 kW dem.</text>
+              <rect x="374" y="619" width="132" height="19" rx="9.5" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1" />
+              <text x="440" y="631.5" text-anchor="middle" class="f b7" font-size="8.3" fill="#1D4ED8">+ 49 W en SAI-01 24 Vdc</text>
+            </g>
+
+            <!-- ===== SALIDA 2: S4 Secadores Normal (x = 538 -> Hueco A -> Fila 2 Col 1) ===== -->
+            <g class="clickable" data-inspect="normal">
+              <circle cx="538" cy="412" r="3.6" fill="#0F2A5F" />
+              <line x1="538" y1="412" x2="538" y2="438" stroke="#1D4ED8" stroke-width="2.3" />
+              <line x1="534" y1="434" x2="542" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="542" y1="434" x2="534" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="538" y1="438" x2="531" y2="460" stroke="#1D4ED8" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="538" cy="462" r="2.6" fill="#1D4ED8" />
+              <text x="548" y="454" class="f b8" font-size="9" fill="#0F2A5F">QF-S4N</text>
+              <path d="M 538 465 L 538 668 L 440 668 L 440 684" fill="none" stroke="#1D4ED8" stroke-width="2.3" marker-end="url(#arr-blue)" />
+
+              <rect x="356" y="688" width="168" height="160" rx="9" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="1.4" filter="url(#sh)" />
+              <rect x="356" y="688" width="168" height="24" rx="8" fill="#0F2A5F" />
+              <text x="440" y="704" text-anchor="middle" class="f b8" font-size="9.8" fill="#FFFFFF">S4 · Secadores (Normal)</text>
+              <text x="440" y="729" text-anchor="middle" class="f b7" font-size="9.3" fill="#0F172A">DR-401A/B (1+1)</text>
+              <text x="440" y="744" text-anchor="middle" class="f b5" font-size="9" fill="#475569">+ 4 purgadores cond. (230 V)</text>
+              <text x="440" y="759" text-anchor="middle" class="f b5" font-size="8.7" fill="#64748B">(Compresores en Esencial)</text>
+              <line x1="368" y1="770" x2="512" y2="770" stroke="#E2E8F0" stroke-width="1" />
+              <text x="440" y="787" text-anchor="middle" class="f b8" font-size="9.8" fill="#1D4ED8">5,08 kW inst.</text>
+              <text x="440" y="803" text-anchor="middle" class="f b8" font-size="9.8" fill="#047857">2,50 kW dem.</text>
+              <rect x="374" y="816" width="132" height="19" rx="9.5" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1" />
+              <text x="440" y="828.5" text-anchor="middle" class="f b7" font-size="8.3" fill="#1D4ED8">+ 2 W en SAI-01 24 Vdc</text>
+            </g>
+
+            <!-- ===== SALIDA 3: S2 Enfriamiento Rev. 3 (x = 636 -> Fila 1 Col 2) ===== -->
+            <g class="clickable" data-inspect="normal">
+              <circle cx="636" cy="412" r="3.6" fill="#0F2A5F" />
+              <line x1="636" y1="412" x2="636" y2="438" stroke="#1D4ED8" stroke-width="2.3" />
+              <line x1="632" y1="434" x2="640" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="640" y1="434" x2="632" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="636" y1="438" x2="629" y2="460" stroke="#1D4ED8" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="636" cy="462" r="2.6" fill="#1D4ED8" />
+              <text x="646" y="454" class="f b8" font-size="9.2" fill="#0F2A5F">QF-S2</text>
+              <line x1="636" y1="465" x2="636" y2="488" stroke="#1D4ED8" stroke-width="2.3" marker-end="url(#arr-blue)" />
+
+              <rect x="552" y="492" width="168" height="156" rx="9" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="1.4" filter="url(#sh)" />
+              <rect x="552" y="492" width="168" height="24" rx="8" fill="#0F2A5F" />
+              <text x="636" y="508" text-anchor="middle" class="f b8" font-size="9.8" fill="#FFFFFF">S2 · Enfriamiento (Rev. 3)</text>
+              <text x="636" y="533" text-anchor="middle" class="f b7" font-size="9.2" fill="#0F172A">P-201A/B (1+1) · CT-201 VFD</text>
+              <text x="636" y="548" text-anchor="middle" class="f b5" font-size="9" fill="#475569">3 válv. 230 V + AT-207</text>
+              <text x="636" y="563" text-anchor="middle" class="f b5" font-size="8.8" fill="#64748B">120 m³/h · 1.110 kW térm.</text>
+              <line x1="564" y1="574" x2="708" y2="574" stroke="#E2E8F0" stroke-width="1" />
+              <text x="636" y="591" text-anchor="middle" class="f b8" font-size="9.8" fill="#1D4ED8">49,54 kW inst.</text>
+              <text x="636" y="607" text-anchor="middle" class="f b8" font-size="9.8" fill="#047857">24,48 kW dem.</text>
+              <rect x="570" y="619" width="132" height="19" rx="9.5" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1" />
+              <text x="636" y="631.5" text-anchor="middle" class="f b7" font-size="8.3" fill="#1D4ED8">+ 30 W en SAI-01 24 Vdc</text>
+            </g>
+
+            <!-- ===== SALIDA 4: S5 Dosificación (x = 734 -> Hueco B -> Fila 2 Col 2) ===== -->
+            <g class="clickable" data-inspect="normal">
+              <circle cx="734" cy="412" r="3.6" fill="#0F2A5F" />
+              <line x1="734" y1="412" x2="734" y2="438" stroke="#1D4ED8" stroke-width="2.3" />
+              <line x1="730" y1="434" x2="738" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="738" y1="434" x2="730" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="734" y1="438" x2="727" y2="460" stroke="#1D4ED8" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="734" cy="462" r="2.6" fill="#1D4ED8" />
+              <text x="744" y="454" class="f b8" font-size="9.2" fill="#0F2A5F">QF-S5</text>
+              <path d="M 734 465 L 734 668 L 636 668 L 636 684" fill="none" stroke="#1D4ED8" stroke-width="2.3" marker-end="url(#arr-blue)" />
+
+              <rect x="552" y="688" width="168" height="160" rx="9" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="1.4" filter="url(#sh)" />
+              <rect x="552" y="688" width="168" height="24" rx="8" fill="#0F2A5F" />
+              <text x="636" y="704" text-anchor="middle" class="f b8" font-size="10.2" fill="#FFFFFF">S5 · Dosificación</text>
+              <text x="636" y="729" text-anchor="middle" class="f b7" font-size="9.3" fill="#0F172A">P-501–504 (1+1 · 230 V)</text>
+              <text x="636" y="744" text-anchor="middle" class="f b5" font-size="9" fill="#475569">NaOCl + Antiincrustante</text>
+              <text x="636" y="759" text-anchor="middle" class="f b5" font-size="8.2" fill="#64748B">LALL-501/502 (vía LT-501/502)</text>
+              <line x1="564" y1="770" x2="708" y2="770" stroke="#E2E8F0" stroke-width="1" />
+              <text x="636" y="787" text-anchor="middle" class="f b8" font-size="9.8" fill="#1D4ED8">0,28 kW inst.</text>
+              <text x="636" y="803" text-anchor="middle" class="f b8" font-size="9.8" fill="#047857">0,14 kW dem.</text>
+              <rect x="570" y="816" width="132" height="19" rx="9.5" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1" />
+              <text x="636" y="828.5" text-anchor="middle" class="f b7" font-size="8.3" fill="#1D4ED8">+ 13 W en SAI-01 24 Vdc</text>
+            </g>
+
+            <!-- ===== SALIDA 5: S3 Vapor Caldera (x = 832 -> Fila 1 Col 3) ===== -->
+            <g class="clickable" data-inspect="normal">
+              <circle cx="832" cy="412" r="3.6" fill="#0F2A5F" />
+              <line x1="832" y1="412" x2="832" y2="438" stroke="#1D4ED8" stroke-width="2.3" />
+              <line x1="828" y1="434" x2="836" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="836" y1="434" x2="828" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="832" y1="438" x2="825" y2="460" stroke="#1D4ED8" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="832" cy="462" r="2.6" fill="#1D4ED8" />
+              <text x="842" y="454" class="f b8" font-size="9.2" fill="#0F2A5F">QF-S3</text>
+              <line x1="832" y1="465" x2="832" y2="488" stroke="#1D4ED8" stroke-width="2.3" marker-end="url(#arr-blue)" />
+
+              <rect x="748" y="492" width="168" height="156" rx="9" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="1.4" filter="url(#sh)" />
+              <rect x="748" y="492" width="168" height="24" rx="8" fill="#0F2A5F" />
+              <text x="832" y="508" text-anchor="middle" class="f b8" font-size="10.2" fill="#FFFFFF">S3 · Vapor (Caldera)</text>
+              <text x="832" y="533" text-anchor="middle" class="f b7" font-size="9.2" fill="#0F172A">P-301A–D · BLR-301 · BMS</text>
+              <text x="832" y="548" text-anchor="middle" class="f b5" font-size="9" fill="#475569">5 válv. modul. (fs = 0,40)</text>
+              <text x="832" y="563" text-anchor="middle" class="f b5" font-size="8.8" fill="#64748B">2.000 kg/h @ 10 bar(g)</text>
+              <line x1="760" y1="574" x2="904" y2="574" stroke="#E2E8F0" stroke-width="1" />
+              <text x="832" y="591" text-anchor="middle" class="f b8" font-size="9.8" fill="#1D4ED8">10,95 kW inst.</text>
+              <text x="832" y="607" text-anchor="middle" class="f b8" font-size="9.8" fill="#047857">6,68 kW dem.</text>
+              <rect x="766" y="619" width="132" height="19" rx="9.5" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1" />
+              <text x="832" y="631.5" text-anchor="middle" class="f b7" font-size="8.3" fill="#1D4ED8">+ 60 W en SAI-01 24 Vdc</text>
+            </g>
+
+            <!-- ===== SALIDA 6: S6 Jockey P-602 (x = 928 -> Margen der -> Fila 2 Col 3) ===== -->
+            <g class="clickable" data-inspect="normal">
+              <circle cx="928" cy="412" r="3.6" fill="#0F2A5F" />
+              <line x1="928" y1="412" x2="928" y2="438" stroke="#1D4ED8" stroke-width="2.3" />
+              <line x1="924" y1="434" x2="932" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="932" y1="434" x2="924" y2="442" stroke="#1D4ED8" stroke-width="1.8" />
+              <line x1="928" y1="438" x2="921" y2="460" stroke="#1D4ED8" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="928" cy="462" r="2.6" fill="#1D4ED8" />
+              <text x="917" y="454" text-anchor="end" class="f b8" font-size="8.6" fill="#0F2A5F">QF-P602</text>
+              <path d="M 928 465 L 928 668 L 832 668 L 832 684" fill="none" stroke="#1D4ED8" stroke-width="2.3" marker-end="url(#arr-blue)" />
+
+              <rect x="748" y="688" width="168" height="160" rx="9" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="1.4" filter="url(#sh)" />
+              <rect x="748" y="688" width="168" height="24" rx="8" fill="#0F2A5F" />
+              <text x="832" y="704" text-anchor="middle" class="f b8" font-size="10.2" fill="#FFFFFF">S6 · Jockey (P-602)</text>
+              <text x="832" y="729" text-anchor="middle" class="f b7" font-size="9.3" fill="#0F172A">4,0 kW IEC · 400 V 3F</text>
+              <text x="832" y="744" text-anchor="middle" class="f b5" font-size="9" fill="#475569">Mantiene 12,5–13,5 bar</text>
+              <text x="832" y="759" text-anchor="middle" class="f b5" font-size="8.7" fill="#64748B">Intermitente (no extinción)</text>
+              <line x1="760" y1="770" x2="904" y2="770" stroke="#E2E8F0" stroke-width="1" />
+              <text x="832" y="787" text-anchor="middle" class="f b8" font-size="9.8" fill="#1D4ED8">4,44 kW inst.</text>
+              <text x="832" y="803" text-anchor="middle" class="f b7" font-size="9.8" fill="#64748B">0,00 kW cont.</text>
+              <rect x="766" y="816" width="132" height="19" rx="9.5" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1" />
+              <text x="832" y="828.5" text-anchor="middle" class="f b7" font-size="8.4" fill="#475569">In = 7,8 A · Cable RZ1-K</text>
+            </g>
+          </g>
+
+          <!-- =============================================================== -->
+          <!-- 5. GRUPO ELECTRÓGENO DE EMERGENCIA (GE-01 · 125 kVA PRP)        -->
+          <!-- =============================================================== -->
+          <g id="grp-ge" class="branch">
+            <!-- Tarjeta clickeable GE-01 125 kVA -->
+            <g class="clickable" data-inspect="ge">
+              <rect id="ge-card" x="960" y="14" width="484" height="126" rx="12" fill="#FFFBEB" stroke="#D97706" stroke-width="1.8" filter="url(#sh)" />
+              <!-- Símbolo IEC Generador G~ -->
+              <circle id="ge-circle" cx="1014" cy="74" r="27" fill="#FFFFFF" stroke="#D97706" stroke-width="2.6" />
+              <text x="1014" y="74" text-anchor="middle" class="f b8" font-size="17" fill="#B45309">G</text>
+              <text x="1014" y="91" text-anchor="middle" class="f b8" font-size="14" fill="#D97706">~</text>
+              <!-- Tierra GE-01 -->
+              <line x1="1014" y1="101" x2="1014" y2="114" stroke="#047857" stroke-width="1.7" />
+              <line x1="1005" y1="114" x2="1023" y2="114" stroke="#047857" stroke-width="1.7" />
+              <line x1="1008" y1="119" x2="1020" y2="119" stroke="#047857" stroke-width="1.5" />
+              <line x1="1011" y1="124" x2="1017" y2="124" stroke="#047857" stroke-width="1.3" />
+
+              <!-- Etiqueta estado dinámico GE-01 -->
+              <rect id="ge-badge-bg" x="1282" y="23" width="150" height="20" rx="10" fill="#FFFFFF" stroke="#FCD34D" stroke-width="1.2" />
+              <text id="ge-badge-txt" x="1357" y="36.5" text-anchor="middle" class="f b8" font-size="9" fill="#B45309">
+                EN ESPERA (0,0 %)
+              </text>
+
+              <text x="1056" y="37" class="f b8" font-size="10" fill="#B45309" letter-spacing="0.3">
+                GE-01 · EMERGENCIA · ISO 8528 G2/G3
+              </text>
+              <text x="1056" y="57" class="f b8" font-size="12.2" fill="#78350F">
+                GRUPO ELECTRÓGENO DIÉSEL INSONORIZADO
+              </text>
+              <text x="1056" y="76" class="f b8" font-size="11.2" fill="#B45309">
+                125 kVA PRP (100 kW) / 138 kVA ESP · 400/230 V
+              </text>
+              <text x="1056" y="94" class="f b6" font-size="9.8" fill="#334155">
+                Depósito 500 L (≈ 28,8 h autonomía) · Carga operativa 64,3%
+              </text>
+              <text x="1056" y="111" class="f b6" font-size="9.4" fill="#475569">
+                Arranque automático &lt; 15 s · Enclavado en ATS (REBT ITC-BT-40)
+              </text>
+              <text x="1056" y="127" class="f b7" font-size="9.1" fill="#92400E">
+                Respalda exclusivamente Embarrado Esencial (NO alimenta P-601)
+              </text>
+            </g>
+
+            <!-- Bajada desde GE-01 a QF-GE y entrada II (GRUPO) del ATS -->
+            <line x1="1264" y1="140" x2="1264" y2="178" stroke="#D97706" stroke-width="3.4" />
+            <line x1="1259" y1="173" x2="1269" y2="183" stroke="#D97706" stroke-width="2.2" />
+            <line x1="1269" y1="173" x2="1259" y2="183" stroke="#D97706" stroke-width="2.2" />
+            <line x1="1264" y1="178" x2="1264" y2="210" stroke="#D97706" stroke-width="3.2" />
+            <circle cx="1264" cy="210" r="3.2" fill="#D97706" />
+
+            <rect x="1280" y="168" width="164" height="50" rx="7" fill="#FFFFFF" stroke="#FCD34D" stroke-width="1.2" filter="url(#sh)" />
+            <text x="1290" y="184" class="f b8" font-size="9.8" fill="#92400E">QF-GE · 250 A (4P)</text>
+            <text x="1290" y="198" class="f b7" font-size="8.6" fill="#B45309">Reg. 200 A (In = 180,4 A)</text>
+            <text x="1290" y="210" class="f b5" font-size="8.3" fill="#475569">MCCB salida GE-01</text>
+
+            <line x1="1264" y1="213" x2="1264" y2="274" stroke="#D97706" stroke-width="3.4" marker-end="url(#arr-amber)" />
+            <path id="flow-ge-ats" class="flow-line" d="M 1264 142 L 1264 270" stroke="#FDE68A" stroke-width="2.5" />
+          </g>
+
+          <!-- =============================================================== -->
+          <!-- CONMUTADOR DE TRANSFERENCIA AUTOMÁTICA (ATS 250 A · 4P)         -->
+          <!-- =============================================================== -->
+          <g id="grp-ats" class="branch clickable" data-inspect="ats">
+            <rect id="ats-card" x="998" y="278" width="406" height="84" rx="10" fill="#FFFFFF" stroke="#D97706" stroke-width="1.8" filter="url(#sh)" />
+            <rect x="998" y="278" width="406" height="22" rx="9" fill="#FEF3C7" />
+            <text x="1201" y="293" text-anchor="middle" class="f b8" font-size="10.2" fill="#92400E">
+              ATS · 250 A (4P) · TRANSFERENCIA AUTOMÁTICA (REBT ITC-BT-40)
+            </text>
+
+            <!-- Diagrama simbólico de conmutación I (RED) / II (GE-01) -->
+            <circle cx="1056" cy="318" r="4.5" fill="#1D4ED8" />
+            <text x="1008" y="322" class="f b8" font-size="9.5" fill="#1D4ED8">I · RED</text>
+
+            <circle cx="1264" cy="318" r="4.5" fill="#D97706" />
+            <text x="1276" y="322" class="f b8" font-size="9.5" fill="#B45309">II · GE-01</text>
+
+            <!-- Línea de enclavamiento mecánico/eléctrico -->
+            <line x1="1066" y1="318" x2="1254" y2="318" stroke="#CBD5E1" stroke-width="1.4" stroke-dasharray="3 3" />
+
+            <!-- Contacto común inferior y cuchilla móvil del ATS -->
+            <line id="ats-blade" class="switch-arm" x1="1160" y1="350" x2="1058" y2="319" stroke="#1D4ED8" stroke-width="3.4" stroke-linecap="round" />
+            <circle cx="1160" cy="350" r="4" fill="#0F2A5F" />
+
+            <!-- Badge posición activa del ATS -->
+            <rect id="ats-badge-bg" x="1102" y="323" width="116" height="17" rx="8.5" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1" />
+            <text id="ats-badge-txt" x="1160" y="334.5" text-anchor="middle" class="f b8" font-size="8.6" fill="#1D4ED8">
+              POS. I · RED
+            </text>
+
+            <text x="1340" y="352" text-anchor="middle" class="f b6" font-size="8.7" fill="#64748B">
+              Enclav. mec.+eléc. (&lt; 15 s)
+            </text>
+
+            <!-- Salida vertical ATS → Embarrado Esencial -->
+            <line id="line-ats-ess" x1="1160" y1="362" x2="1160" y2="412" stroke="#D97706" stroke-width="4" />
+            <path id="flow-ats-ess" class="flow-line active" d="M 1160 364 L 1160 410" stroke="#FDE68A" stroke-width="2.5" />
+            <circle cx="1160" cy="412" r="4.8" fill="#D97706" />
+          </g>
+
+          <!-- =============================================================== -->
+          <!-- 6. NIVEL 1 — EMBARRADO ESENCIAL (RED / GE-01 125 kVA)           -->
+          <!-- =============================================================== -->
+          <g id="grp-essential" class="branch">
+            <!-- Cabecera clickeable del Embarrado Esencial -->
+            <g class="clickable" data-inspect="essential">
+              <rect x="956" y="378" width="192" height="24" rx="6" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.3" />
+              <text x="1052" y="394" text-anchor="middle" class="f b8" font-size="10" fill="#92400E">
+                NIVEL 1 · EMBARRADO ESENCIAL
+              </text>
+              <rect x="1172" y="378" width="262" height="24" rx="6" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.3" />
+              <text x="1303" y="394" text-anchor="middle" class="f b8" font-size="9.5" fill="#92400E">
+                119,30 kW inst. / 64,30 kW dem. (80,38 kVA)
+              </text>
+
+              <!-- Barra principal Ámbar -->
+              <line x1="956" y1="412" x2="1434" y2="412" stroke="#D97706" stroke-width="7.5" stroke-linecap="round" />
+              <path id="flow-bus-ess" class="flow-line active" d="M 962 412 L 1428 412" stroke="#FEF3C7" stroke-width="2.5" />
+            </g>
+
+            <!-- ===== SALIDA E1: S4 Compresores C-401A/B (x = 1094 -> Fila 1 Izq) ===== -->
+            <g class="clickable" data-inspect="essential">
+              <circle cx="1094" cy="412" r="3.6" fill="#92400E" />
+              <line x1="1094" y1="412" x2="1094" y2="438" stroke="#D97706" stroke-width="2.3" />
+              <line x1="1090" y1="434" x2="1098" y2="442" stroke="#D97706" stroke-width="1.8" />
+              <line x1="1098" y1="434" x2="1090" y2="442" stroke="#D97706" stroke-width="1.8" />
+              <line x1="1094" y1="438" x2="1087" y2="460" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="1094" cy="462" r="2.6" fill="#D97706" />
+              <text x="1104" y="454" class="f b8" font-size="9" fill="#92400E">QF-C401</text>
+              <line x1="1094" y1="465" x2="1094" y2="490" stroke="#D97706" stroke-width="2.3" marker-end="url(#arr-amber)" />
+
+              <rect x="992" y="494" width="204" height="94" rx="9" fill="#FFFFFF" stroke="#FCD34D" stroke-width="1.5" filter="url(#sh)" />
+              <rect x="992" y="494" width="204" height="23" rx="8" fill="#B45309" />
+              <text x="1094" y="509.5" text-anchor="middle" class="f b8" font-size="9.8" fill="#FFFFFF">S4 · Compresores C-401A/B</text>
+              <text x="1094" y="534" text-anchor="middle" class="f b8" font-size="10" fill="#B45309">110,00 kW inst. / 55,00 kW dem.</text>
+              <text x="1094" y="551" text-anchor="middle" class="f b6" font-size="9.2" fill="#334155">1+1 enclavado · VFD / arranque suave</text>
+              <text x="1094" y="566" text-anchor="middle" class="f b5" font-size="8.9" fill="#475569">400 V 3F · Aire comprimido 8 bar(g)</text>
+              <text x="1094" y="580" text-anchor="middle" class="f b7" font-size="8.5" fill="#047857">Arranque escalonado tras GE-01 (+5–10 s)</text>
+            </g>
+
+            <!-- ===== SALIDA E2: Central PCI EN 54-4 (x = 1208 -> Hueco -> Fila 2 Izq) ===== -->
+            <g class="clickable" data-inspect="essential">
+              <circle cx="1208" cy="412" r="3.6" fill="#92400E" />
+              <line x1="1208" y1="412" x2="1208" y2="438" stroke="#D97706" stroke-width="2.3" />
+              <line x1="1204" y1="434" x2="1212" y2="442" stroke="#D97706" stroke-width="1.8" />
+              <line x1="1212" y1="434" x2="1204" y2="442" stroke="#D97706" stroke-width="1.8" />
+              <line x1="1208" y1="438" x2="1201" y2="460" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="1208" cy="462" r="2.6" fill="#D97706" />
+              <text x="1218" y="454" class="f b8" font-size="9" fill="#B91C1C">QF-CPCI</text>
+              <path d="M 1208 465 L 1208 596 L 1094 596 L 1094 602" fill="none" stroke="#DC2626" stroke-width="2.2" marker-end="url(#arr-red)" />
+
+              <rect x="992" y="606" width="204" height="98" rx="9" fill="#FFFFFF" stroke="#FCA5A5" stroke-width="1.6" filter="url(#sh)" />
+              <rect x="992" y="606" width="204" height="23" rx="8" fill="#B91C1C" />
+              <text x="1094" y="621.5" text-anchor="middle" class="f b8" font-size="9.8" fill="#FFFFFF">Central PCI (EN 54-4)</text>
+              <text x="1094" y="645" text-anchor="middle" class="f b8" font-size="10" fill="#B91C1C">0,30 kW · 230 V dedicado AS+</text>
+              <text x="1094" y="661" text-anchor="middle" class="f b6" font-size="9.1" fill="#334155">Baterías internas 24 h + 30 min</text>
+              <rect x="1008" y="672" width="172" height="22" rx="5" fill="#FEF2F2" stroke="#FECACA" stroke-width="1" />
+              <text x="1094" y="686.5" text-anchor="middle" class="f b8" font-size="8.7" fill="#B91C1C">
+                Excluida de SAI-01 de proceso
+              </text>
+            </g>
+
+            <!-- ===== SALIDA E3: S6 Auxiliares P-603 (x = 1320 -> Fila 1 Der) ===== -->
+            <g class="clickable" data-inspect="essential">
+              <circle cx="1320" cy="412" r="3.6" fill="#92400E" />
+              <line x1="1320" y1="412" x2="1320" y2="438" stroke="#D97706" stroke-width="2.3" />
+              <line x1="1316" y1="434" x2="1324" y2="442" stroke="#D97706" stroke-width="1.8" />
+              <line x1="1324" y1="434" x2="1316" y2="442" stroke="#D97706" stroke-width="1.8" />
+              <line x1="1320" y1="438" x2="1313" y2="460" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="1320" cy="462" r="2.6" fill="#D97706" />
+              <text x="1330" y="454" class="f b8" font-size="9" fill="#92400E">QF-P603</text>
+              <line x1="1320" y1="465" x2="1320" y2="490" stroke="#D97706" stroke-width="2.3" marker-end="url(#arr-amber)" />
+
+              <rect x="1220" y="494" width="200" height="94" rx="9" fill="#FFFFFF" stroke="#FCD34D" stroke-width="1.5" filter="url(#sh)" />
+              <rect x="1220" y="494" width="200" height="23" rx="8" fill="#B45309" />
+              <text x="1320" y="509.5" text-anchor="middle" class="f b8" font-size="9.8" fill="#FFFFFF">S6 · Auxiliares P-603</text>
+              <text x="1320" y="534" text-anchor="middle" class="f b8" font-size="10.2" fill="#B45309">2,00 kW · 230 V (1F) cont.</text>
+              <text x="1320" y="551" text-anchor="middle" class="f b6" font-size="9.1" fill="#334155">2 cargadores baterías (1,0 kW)</text>
+              <text x="1320" y="566" text-anchor="middle" class="f b6" font-size="9.1" fill="#334155">+ precalentador bloque (1,0 kW)</text>
+              <text x="1320" y="580" text-anchor="middle" class="f b7" font-size="8.6" fill="#047857">Garantiza arranque inmediato diésel</text>
+            </g>
+
+            <!-- ===== SALIDA E4: Auxiliares Críticos SUB-01 + Emergencia (x = 1430 -> Margen -> Fila 2 Der) ===== -->
+            <g class="clickable" data-inspect="essential">
+              <circle cx="1430" cy="412" r="3.6" fill="#92400E" />
+              <line x1="1430" y1="412" x2="1430" y2="438" stroke="#D97706" stroke-width="2.3" />
+              <line x1="1426" y1="434" x2="1434" y2="442" stroke="#D97706" stroke-width="1.8" />
+              <line x1="1434" y1="434" x2="1426" y2="442" stroke="#D97706" stroke-width="1.8" />
+              <line x1="1430" y1="438" x2="1423" y2="460" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="1430" cy="462" r="2.6" fill="#D97706" />
+              <text x="1418" y="454" text-anchor="end" class="f b8" font-size="8.8" fill="#92400E">QF-AUX</text>
+              <path d="M 1430 465 L 1430 596 L 1320 596 L 1320 602" fill="none" stroke="#D97706" stroke-width="2.3" marker-end="url(#arr-amber)" />
+
+              <rect x="1220" y="606" width="200" height="98" rx="9" fill="#FFFFFF" stroke="#FCD34D" stroke-width="1.5" filter="url(#sh)" />
+              <rect x="1220" y="606" width="200" height="23" rx="8" fill="#B45309" />
+              <text x="1320" y="621.5" text-anchor="middle" class="f b8" font-size="9.5" fill="#FFFFFF">Auxiliares SUB-01 y Emerg.</text>
+              <text x="1320" y="646" text-anchor="middle" class="f b8" font-size="10.2" fill="#B45309">2,50 kW · 230 V (1F)</text>
+              <text x="1320" y="663" text-anchor="middle" class="f b6" font-size="8.9" fill="#334155">Alumb. emerg. planta (33 uds · BT-28)</text>
+              <text x="1320" y="679" text-anchor="middle" class="f b6" font-size="8.9" fill="#334155">Ventilación Sala BT + tomas 16 A</text>
+              <text x="1320" y="695" text-anchor="middle" class="f b5" font-size="8.5" fill="#64748B">Respaldo continuo por GE-01 (125 kVA)</text>
+            </g>
+          </g>
+
+          <!-- =============================================================== -->
+          <!-- 7. NIVEL 3 — SAI-01 ON-LINE DOBLE CONVERSIÓN (5 kVA -> 24 Vdc)  -->
+          <!-- =============================================================== -->
+          <g id="grp-sai" class="branch">
+            <!-- Bajada dedicada desde Embarrado Esencial (canal izquierdo x = 970) -->
+            <circle cx="970" cy="412" r="3.6" fill="#047857" />
+            <line x1="970" y1="412" x2="970" y2="438" stroke="#047857" stroke-width="2.6" />
+            <line x1="966" y1="434" x2="974" y2="442" stroke="#047857" stroke-width="1.8" />
+            <line x1="974" y1="434" x2="966" y2="442" stroke="#047857" stroke-width="1.8" />
+            <line x1="970" y1="438" x2="963" y2="460" stroke="#047857" stroke-width="2.3" stroke-linecap="round" />
+            <circle cx="970" cy="462" r="2.8" fill="#047857" />
+            <text x="980" y="454" class="f b8" font-size="9" fill="#047857">QF-SAI</text>
+            <line x1="970" y1="465" x2="970" y2="728" stroke="#047857" stroke-width="2.8" marker-end="url(#arr-green)" />
+            <path id="flow-ess-sai" class="flow-line active" d="M 970 465 L 970 724" stroke="#6EE7B7" stroke-width="2" />
+
+            <!-- Etiqueta vertical de entrada rectificador 4,50 kW -->
+            <rect x="953" y="546" width="34" height="90" rx="5" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1" />
+            <text x="970" y="591" text-anchor="middle" class="f b8" font-size="8.6" fill="#047857" transform="rotate(-90 970 591)">
+              4,50 kW · 230 V
+            </text>
+
+            <!-- Bloque clickeable NIVEL 3 — SAI-01 5 kVA / 24 Vdc -->
+            <g class="clickable" data-inspect="sai">
+              <rect x="956" y="732" width="478" height="204" rx="12" fill="#ECFDF5" stroke="#047857" stroke-width="1.8" filter="url(#sh)" />
+
+              <!-- Símbolo IEC Doble Conversión Rectificador/Inversor + Batería -->
+              <rect x="968" y="744" width="60" height="48" rx="7" fill="#FFFFFF" stroke="#047857" stroke-width="1.7" />
+              <line x1="970" y1="790" x2="1026" y2="746" stroke="#A7F3D0" stroke-width="1.5" />
+              <text x="983" y="763" text-anchor="middle" class="f b8" font-size="13" fill="#047857">~</text>
+              <text x="1012" y="783" text-anchor="middle" class="f b8" font-size="13" fill="#065F46">=</text>
+              <!-- Icono batería -->
+              <line x1="976" y1="779" x2="988" y2="779" stroke="#047857" stroke-width="2" />
+              <line x1="979" y1="783" x2="985" y2="783" stroke="#047857" stroke-width="1.5" />
+
+              <text x="1038" y="758" class="f b8" font-size="10.3" fill="#065F46">
+                NIVEL 3 · SAI-01 ON-LINE DOBLE CONVERSIÓN (5 kVA / 4,5 kW)
+              </text>
+              <text x="1038" y="775" class="f b7" font-size="9.3" fill="#047857">
+                Entrada: 4,50 kW (230 V 1F) · Autonomía: 47,5 min real / 38 min diseño
+              </text>
+              <text x="1038" y="790" class="f b5" font-size="8.8" fill="#475569">
+                VFI-SS-111 (0 ms) · Puente &gt; arranque GE-01 (&lt; 15 s) · Central PCI excluida
+              </text>
+
+              <!-- Barra 24 Vdc -->
+              <line x1="970" y1="810" x2="1420" y2="810" stroke="#047857" stroke-width="4.8" stroke-linecap="round" />
+              <path id="flow-bus-sai" class="flow-line active" d="M 976 810 L 1414 810" stroke="#A7F3D0" stroke-width="2.2" />
+              <rect x="1108" y="801.5" width="174" height="17" rx="8.5" fill="#047857" />
+              <text x="1195" y="813.5" text-anchor="middle" class="f b8" font-size="8.5" fill="#FFFFFF">BARRA 24 Vdc (Fuentes 1+1 · 60 A)</text>
+
+              <!-- Dos derivaciones a campo y DCS -->
+              <line x1="1096" y1="810" x2="1096" y2="828" stroke="#047857" stroke-width="2.1" marker-end="url(#arr-green)" />
+              <line x1="1328" y1="810" x2="1328" y2="828" stroke="#047857" stroke-width="2.1" marker-end="url(#arr-green)" />
+
+              <!-- Subtarjeta 1: Instrumentación crítica de campo S1-S6 -->
+              <rect x="968" y="832" width="256" height="92" rx="8" fill="#FFFFFF" stroke="#A7F3D0" stroke-width="1.3" />
+              <text x="1096" y="851" text-anchor="middle" class="f b8" font-size="9.6" fill="#065F46">
+                Instrumentación Crítica Campo (S1–S6)
+              </text>
+              <text x="1096" y="868" text-anchor="middle" class="f b8" font-size="9.5" fill="#047857">
+                0,174 kW exactos (174 W · 7,25 A)
+              </text>
+              <text x="1096" y="886" text-anchor="middle" class="f b6" font-size="8.9" fill="#334155">
+                S1: 49 W · S2: 30 W · S3: 60 W
+              </text>
+              <text x="1096" y="901" text-anchor="middle" class="f b6" font-size="8.9" fill="#334155">
+                S4: 2 W · S5: 13 W · S6: 20 W
+              </text>
+              <text x="1096" y="916" text-anchor="middle" class="f b5" font-size="8.1" fill="#64748B">
+                Bandeja segregada I&amp;C (MBTS · ITC-BT-36)
+              </text>
+
+              <!-- Subtarjeta 2: Armario DCS / PLC y comunicaciones -->
+              <rect x="1234" y="832" width="188" height="92" rx="8" fill="#FFFFFF" stroke="#A7F3D0" stroke-width="1.3" />
+              <text x="1328" y="851" text-anchor="middle" class="f b8" font-size="9.5" fill="#065F46">
+                Armario DCS / PLC y Comms.
+              </text>
+              <text x="1328" y="868" text-anchor="middle" class="f b8" font-size="9.1" fill="#047857">
+                1,97 kW reales (2,46 kW dis.)
+              </text>
+              <text x="1328" y="885" text-anchor="middle" class="f b5" font-size="8.5" fill="#475569">
+                PLC/DCS, SCADA y pérd. conv.
+              </text>
+              <text x="1328" y="900" text-anchor="middle" class="f b6" font-size="8.3" fill="#334155">
+                Salida SAI-01: 2,14 kW (2,68 dis.)
+              </text>
+              <text x="1328" y="915" text-anchor="middle" class="f b6" font-size="8.1" fill="#64748B">
+                Sin bloqueo de arranque PCI
+              </text>
+            </g>
+          </g>
+
+        </svg>
+      </div>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- BANNER EXPLICATIVO DINÁMICO + LEYENDA SEMÁNTICA                       -->
+    <!-- ===================================================================== -->
+    <section id="scenario-banner" class="scenario-banner tone-blue" aria-live="polite">
+      <div class="banner-head">
+        <h2 id="banner-title" class="banner-title">
+          Escenario 1 · Operación Normal (Suministro desde Red Exterior 20 kV en SUB-01)
+        </h2>
+        <div id="banner-norms" class="norm-pills">
+          <span class="norm-pill">REBT ITC-BT-19 / 23 / 44 / 47</span>
+          <span class="norm-pill">Esquema TN-S</span>
+          <span class="norm-pill">UNE 23500:2021 (Reposo)</span>
+        </div>
+      </div>
+      <p id="banner-desc" class="banner-body">
+        La red exterior de 20 kV alimenta el Transformador Tier 2 de 400 kVA en SUB-01 al 32,1% de carga (109,08 kW / 128,3 kVA). El IGA de 400 A permanece cerrado (con protección SPD-01 Tipo 1+2 en cabecera) y el ATS de 250 A está en Posición I (Red), energizando el Embarrado Normal (44,78 kW + BAT-01 de 40 kVAr), el Embarrado Esencial (64,30 kW) y el SAI-01 de 5 kVA (24 Vdc). GE-01 (125 kVA PRP) permanece en espera caliente y el sistema PCI mantiene la red presurizada a 12,5–13,5 bar con la bomba jockey P-602.
+      </p>
+    </section>
+
+    <footer class="legend-bar" aria-label="Leyenda de colores semánticos">
+      <div class="legend-item">
+        <span class="legend-swatch" style="background: #DC2626;"></span>
+        <div class="legend-text">
+          <strong>Nivel 0 · PCI (Aguas arriba IGA)</strong>
+          <span>P-601 (146,67 kW) · SZ1-K AS+ PH120</span>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <span class="legend-swatch" style="background: #D97706;"></span>
+        <div class="legend-text">
+          <strong>Nivel 1 · Esencial + GE-01 (125 kVA)</strong>
+          <span>ATS 250 A · 64,30 kW (64,3% PRP)</span>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <span class="legend-swatch" style="background: #1D4ED8;"></span>
+        <div class="legend-text">
+          <strong>Nivel 2 · Embarrado Normal + BAT-01</strong>
+          <span>Solo Red · 96,34 kW inst. / 44,78 kW dem.</span>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <span class="legend-swatch" style="background: #047857;"></span>
+        <div class="legend-text">
+          <strong>Nivel 3 · SAI-01 (24 Vdc) y P-603</strong>
+          <span>UPS 5 kVA (174 W campo) · Diésel autónoma</span>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <span class="legend-swatch" style="background: #94A3B8;"></span>
+        <div class="legend-text">
+          <strong>Circuito Desenergizado</strong>
+          <span>Sin tensión en el escenario simulado</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL DE INSPECCIÓN TÉCNICA DE BLOQUES (11 FICHAS)                      -->
+  <!-- ======================================================================= -->
+  <div id="inspect-modal" class="modal-backdrop no-print" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-panel">
+      <div id="modal-header" class="modal-header">
+        <div>
+          <div id="modal-tag" class="modal-tag">BLOQUE DEL ESQUEMA</div>
+          <h3 id="modal-title" class="modal-title">Especificaciones Técnicas</h3>
+        </div>
+        <button id="modal-close" type="button" class="modal-close" aria-label="Cerrar ficha técnica">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="modal-summary" class="modal-summary"></p>
+        <table class="spec-table" id="modal-table"><tbody></tbody></table>
+        <div id="modal-norm" class="modal-norm"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificación toast limpia -->
+  <div id="toast" class="toast no-print" role="status" aria-live="polite">
+    <span class="toast-dot" aria-hidden="true"></span>
+    <span id="toast-text">Exportación completada</span>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MOTOR DE SIMULACIÓN, INSPECCIÓN Y EXPORTACIÓN (VANILLA JS AUTOCONTENIDO)-->
+  <!-- ======================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      try {
+        // Referencias DOM principales
+        const svgEl = document.getElementById('unifilar-svg');
+        const scenarioBtns = document.querySelectorAll('.scenario-btn');
+        const bannerEl = document.getElementById('scenario-banner');
+        const bannerTitle = document.getElementById('banner-title');
+        const bannerDesc = document.getElementById('banner-desc');
+        const bannerNorms = document.getElementById('banner-norms');
+
+        // KPIs de telemetría
+        const kpiTrafo = {
+          card: document.getElementById('kpi-trafo'),
+          val: document.getElementById('kpi-trafo-val'),
+          meta: document.getElementById('kpi-trafo-meta'),
+        };
+        const kpiSwitch = {
+          card: document.getElementById('kpi-switch'),
+          val: document.getElementById('kpi-switch-val'),
+          meta: document.getElementById('kpi-switch-meta'),
+        };
+        const kpiGe = {
+          card: document.getElementById('kpi-ge'),
+          val: document.getElementById('kpi-ge-val'),
+          meta: document.getElementById('kpi-ge-meta'),
+        };
+        const kpiPci = {
+          card: document.getElementById('kpi-pci'),
+          val: document.getElementById('kpi-pci-val'),
+          meta: document.getElementById('kpi-pci-meta'),
+        };
+
+        // Grupos SVG y elementos dinámicos
+        const grp = {
+          grid: document.getElementById('grp-grid'),
+          pciElec: document.getElementById('grp-pci-elec'),
+          p603: document.getElementById('grp-p603'),
+          iga: document.getElementById('grp-iga'),
+          igaDown: document.getElementById('grp-iga-downstream'),
+          coupling: document.getElementById('grp-coupling'),
+          normal: document.getElementById('grp-normal'),
+          ge: document.getElementById('grp-ge'),
+          ats: document.getElementById('grp-ats'),
+          essential: document.getElementById('grp-essential'),
+          sai: document.getElementById('grp-sai'),
+        };
+
+        const flows = {
+          trafoTap: document.getElementById('flow-trafo-tap'),
+          pci: document.getElementById('flow-pci'),
+          p603: document.getElementById('flow-p603'),
+          tapIga: document.getElementById('flow-tap-iga'),
+          igaNormal: document.getElementById('flow-iga-normal'),
+          redAts: document.getElementById('flow-red-ats'),
+          busNormal: document.getElementById('flow-bus-normal'),
+          geAts: document.getElementById('flow-ge-ats'),
+          atsEss: document.getElementById('flow-ats-ess'),
+          busEss: document.getElementById('flow-bus-ess'),
+          essSai: document.getElementById('flow-ess-sai'),
+          busSai: document.getElementById('flow-bus-sai'),
+        };
+
+        const dyn = {
+          gridPillBg: document.getElementById('grid-pill-bg'),
+          gridPillTxt: document.getElementById('grid-pill-txt'),
+          trafoBadgeBg: document.getElementById('svg-trafo-badge-bg'),
+          trafoBadgeTxt: document.getElementById('svg-trafo-badge-txt'),
+          igaBlade: document.getElementById('iga-blade'),
+          igaCard: document.getElementById('iga-card'),
+          igaBadgeBg: document.getElementById('iga-badge-bg'),
+          igaBadgeTxt: document.getElementById('iga-badge-txt'),
+          atsBlade: document.getElementById('ats-blade'),
+          atsBadgeBg: document.getElementById('ats-badge-bg'),
+          atsBadgeTxt: document.getElementById('ats-badge-txt'),
+          lineAtsEss: document.getElementById('line-ats-ess'),
+          geBadgeBg: document.getElementById('ge-badge-bg'),
+          geBadgeTxt: document.getElementById('ge-badge-txt'),
+          p601BadgeBg: document.getElementById('p601-badge-bg'),
+          p601BadgeTxt: document.getElementById('p601-badge-txt'),
+          p601Card: document.getElementById('p601-card'),
+          p603BadgeBg: document.getElementById('p603-badge-bg'),
+          p603BadgeTxt: document.getElementById('p603-badge-txt'),
+          p603Card: document.getElementById('p603-card'),
+        };
+
+        let activeScenario = 'normal';
+
+        // =====================================================================
+        // DEFINICIÓN DE LOS 4 ESCENARIOS INTERACTIVOS
+        // =====================================================================
+        const SCENARIOS = {
+          normal: {
+            tone: 'tone-blue',
+            title: 'Escenario 1 · Operación Normal (Suministro desde Red Exterior 20 kV en SUB-01)',
+            norms: ['REBT ITC-BT-19 / 23 / 44 / 47', 'Esquema TN-S', 'UNE 23500:2021 (Reposo)', 'EN 54-4'],
+            desc: 'La red exterior de 20 kV alimenta el Transformador Tier 2 de 400 kVA en SUB-01 al 32,1% de carga (109,08 kW / 128,3 kVA). El IGA de 400 A está cerrado (con SPD-01 Tipo 1+2 activo en cabecera) y el ATS de 250 A permanece en Posición I (Red), energizando el Embarrado Normal (44,78 kW + BAT-01 de 40 kVAr), el Embarrado Esencial (64,30 kW) y SAI-01 (5 kVA / 24 Vdc). GE-01 (125 kVA PRP) permanece en espera caliente y la bomba jockey P-602 presuriza la red PCI (12,5–13,5 bar).',
+            kpi: {
+              trafo: { tone: 'tone-blue', val: '109,08 kW · 128,3 kVA', meta: '32,1 % carga · Red 20 kV activa · Tier 2 (99,34%)' },
+              sw:    { tone: 'tone-blue', val: 'IGA Cerrado · ATS en Red (I)', meta: 'Normal (44,78 kW + BAT-01) + Esencial (64,30 kW)' },
+              ge:    { tone: 'tone-off',  val: 'En Espera Caliente (0,0 %)', meta: 'GE-01 125 kVA PRP listo · Arranque < 15 s' },
+              pci:   { tone: 'tone-blue', val: 'Standby · Red Presurizada', meta: 'P-602 Jockey (12,5–13,5 bar) · P-601/603 listas' },
+            },
+            svg: {
+              off: [],
+              standby: ['pciElec', 'ge', 'p603'],
+              flows: ['trafoTap', 'tapIga', 'igaNormal', 'redAts', 'busNormal', 'atsEss', 'busEss', 'essSai', 'busSai'],
+              gridPill: { bg: '#0F2A5F', txt: 'RED EXTERIOR MT (20 kV · 50 Hz)' },
+              trafoBadge: { bg: '#EFF6FF', bd: '#BFDBFE', fg: '#1D4ED8', txt: '32,1 % CARGA' },
+              igaOpen: false,
+              igaBadge: { bg: '#EFF6FF', bd: '#BFDBFE', fg: '#1D4ED8', txt: 'CERRADO · ACTIVO' },
+              atsPos: 'red',
+              atsBadge: { bg: '#EFF6FF', bd: '#BFDBFE', fg: '#1D4ED8', txt: 'POS. I · RED' },
+              geBadge: { bg: '#FFFFFF', bd: '#FCD34D', fg: '#B45309', txt: 'EN ESPERA (0,0 %)', pulse: false },
+              p601Badge: { bg: '#FEF2F2', bd: '#FCA5A5', fg: '#B91C1C', txt: 'EN ESPERA (11,5 bar)', pulse: false },
+              p603Badge: { bg: '#FFFFFF', bd: '#6EE7B7', fg: '#047857', txt: 'RESERVA AUTOMÁTICA (11,0 bar)', pulse: false },
+            },
+          },
+
+          fire: {
+            tone: 'tone-red',
+            title: 'Escenario 2 · Incendio con Red Activa (Arranque P-601 a 11,5 bar)',
+            norms: ['UNE 23500:2021 (Tipo C)', 'RIPCI RD 513/2017', 'Protección 14·In Solo Magnética', 'SZ1-K AS+ PH120'],
+            desc: 'Al abrirse hidrantes o BIEs la presión de la red PCI cae a 11,5 bar; los presostatos cableados PSL-611A/B arrancan automáticamente la bomba eléctrica P-601 (132 kW IEC / 146,67 kW elec., 170,5 kVA) mediante arranque suave (~3·In; ΔU = 5,9% en barras y 7,7% total en bornes del motor, límite ≤ 15%). El Transformador de 400 kVA en SUB-01 absorbe sin sobrecarga la planta más la extinción (255,75 kW / 300,9 kVA · 75,2% de carga; protección térmica integral por DGPT2). La protección de P-601 es exclusivamente magnética (14·In ≈ 3.446 A) y P-603 diésel queda en reserva automática a 11,0 bar.',
+            kpi: {
+              trafo: { tone: 'tone-red',   val: '255,75 kW · 300,9 kVA', meta: '75,2 % carga · ΔU arr. P-601: 5,9% barras / 7,7% motor' },
+              sw:    { tone: 'tone-blue',  val: 'IGA Cerrado · ATS en Red (I)', meta: 'P-601 alimentada aguas arriba del IGA' },
+              ge:    { tone: 'tone-off',   val: 'En Espera Caliente (0,0 %)', meta: 'GE-01 no respalda P-601 (respaldo mecánico P-603)' },
+              pci:   { tone: 'tone-red',   val: 'P-601 ELÉCTRICA EN MARCHA', meta: '146,67 kW · 200 m³/h @ 12 bar (PSL-611A/B)' },
+            },
+            svg: {
+              off: [],
+              standby: ['ge', 'p603'],
+              flows: ['trafoTap', 'pci', 'tapIga', 'igaNormal', 'redAts', 'busNormal', 'atsEss', 'busEss', 'essSai', 'busSai'],
+              gridPill: { bg: '#0F2A5F', txt: 'RED EXTERIOR MT (20 kV · ACTIVA)' },
+              trafoBadge: { bg: '#FEF2F2', bd: '#FCA5A5', fg: '#B91C1C', txt: '75,2 % INCENDIO' },
+              igaOpen: false,
+              igaBadge: { bg: '#EFF6FF', bd: '#BFDBFE', fg: '#1D4ED8', txt: 'CERRADO · ACTIVO' },
+              atsPos: 'red',
+              atsBadge: { bg: '#EFF6FF', bd: '#BFDBFE', fg: '#1D4ED8', txt: 'POS. I · RED' },
+              geBadge: { bg: '#FFFFFF', bd: '#FCD34D', fg: '#B45309', txt: 'EN ESPERA (0,0 %)', pulse: false },
+              p601Badge: { bg: '#DC2626', bd: '#B91C1C', fg: '#FFFFFF', txt: 'EN MARCHA (11,5 bar)', pulse: true },
+              p603Badge: { bg: '#FFFFFF', bd: '#6EE7B7', fg: '#047857', txt: 'RESERVA AUTOMÁTICA (11,0 bar)', pulse: false },
+            },
+          },
+
+          'fire-iga': {
+            tone: 'tone-amber',
+            title: 'Escenario 3 · Incendio + Corte Manual del IGA (Intervención de Bomberos)',
+            norms: ['UNE 23500:2021 (Aguas arriba IGA)', 'REBT ITC-BT-40 (ATS)', 'REBT ITC-BT-28', 'EN 54-4'],
+            desc: 'Los bomberos abren manualmente el IGA de 400 A para desenergizar el Embarrado Normal (44,78 kW + BAT-01 a 0 V) y trabajar sin riesgo eléctrico en la planta. Gracias a la derivación aguas arriba del IGA con cable AS+ PH120, la bomba P-601 SIGUE EN MARCHA sin interrupción (146,67 kW · Trafo al 36,7%). Simultáneamente, al perder tensión aguas abajo del IGA, el ATS (250 A) ordena el arranque de GE-01 (125 kVA PRP, < 15 s) y conmuta a Posición II (GE-01), manteniendo vivos al 64,3% de carga el Embarrado Esencial (64,30 kW), SAI-01 (sin microcortes por baterías de 47,5 min) y la Central PCI.',
+            kpi: {
+              trafo: { tone: 'tone-red',   val: '146,67 kW · 170,5 kVA', meta: '36,7 % P (solo rama PCI P-601 aguas arriba IGA)' },
+              sw:    { tone: 'tone-amber', val: 'IGA ABIERTO · ATS en GE-01 (II)', meta: 'Embarrado Normal y BAT-01 desenergizados (0 V)' },
+              ge:    { tone: 'tone-amber', val: 'ACTIVO · 64,30 kW (64,3 %)', meta: 'GE-01 (80,38 kVA) · Respalda Esencial, SAI-01 y PCI' },
+              pci:   { tone: 'tone-red',   val: 'P-601 SIGUE EN MARCHA', meta: 'Sobrevive al corte IGA · Cable AS+ PH120' },
+            },
+            svg: {
+              off: ['igaDown', 'coupling', 'normal'],
+              standby: ['p603'],
+              flows: ['trafoTap', 'pci', 'geAts', 'atsEss', 'busEss', 'essSai', 'busSai'],
+              gridPill: { bg: '#0F2A5F', txt: 'RED EXTERIOR MT (20 kV · ACTIVA)' },
+              trafoBadge: { bg: '#FEF2F2', bd: '#FCA5A5', fg: '#B91C1C', txt: '36,7 % (SOLO PCI)' },
+              igaOpen: true,
+              igaBadge: { bg: '#DC2626', bd: '#B91C1C', fg: '#FFFFFF', txt: 'ABIERTO (BOMBEROS)' },
+              atsPos: 'ge',
+              atsBadge: { bg: '#D97706', bd: '#B45309', fg: '#FFFFFF', txt: 'POS. II · GE-01' },
+              geBadge: { bg: '#D97706', bd: '#B45309', fg: '#FFFFFF', txt: 'ACTIVO · 64,3 %', pulse: true },
+              p601Badge: { bg: '#DC2626', bd: '#B91C1C', fg: '#FFFFFF', txt: 'EN MARCHA (11,5 bar)', pulse: true },
+              p603Badge: { bg: '#FFFFFF', bd: '#6EE7B7', fg: '#047857', txt: 'RESERVA AUTOMÁTICA (11,0 bar)', pulse: false },
+            },
+          },
+
+          blackout: {
+            tone: 'tone-green',
+            title: 'Escenario 4 · Apagón Total Exterior (0 V) + Incendio (GE-01 + P-603 Diésel)',
+            norms: ['UNE 23500:2021 (Abastecimiento Tipo C)', 'REBT ITC-BT-40', 'ISO 8528 G2/G3', 'EN 54-4'],
+            desc: 'Ante un corte total de la red exterior (0 V), quedan sin tensión el Transformador de SUB-01, la bomba eléctrica P-601 y el Embarrado Normal. En menos de 15 s arranca GE-01 de 125 kVA PRP (64,30 kW / 80,38 kVA · 64,3% carga · 28,8 h autonomía) y transfiere vía ATS a Posición II (GE-01), sosteniendo el Embarrado Esencial y SAI-01 (cuyas baterías de 47,5 min cubren el transitorio sin microcortes). En paralelo, al caer la presión PCI a 11,0 bar, los presostatos PSL-613A/B arrancan la Bomba Diésel P-603 (130–140 kW · 200 m³/h @ 12 bar) de forma 100% autónoma por gasóleo y doble batería.',
+            kpi: {
+              trafo: { tone: 'tone-off',   val: '0,00 kW · SIN RED (0 V)', meta: 'Acometida exterior caída · Normal y P-601 sin tensión' },
+              sw:    { tone: 'tone-amber', val: 'Red Caída · ATS en GE-01 (II)', meta: 'Enclavamiento ITC-BT-40 · Transferencia < 15 s' },
+              ge:    { tone: 'tone-amber', val: 'ACTIVO · 64,30 kW (64,3 %)', meta: 'GE-01 (80,38 kVA) · Sostiene Esencial + SAI-01 + Aux.' },
+              pci:   { tone: 'tone-green', val: 'P-603 DIÉSEL AUTÓNOMA', meta: 'EN MARCHA (11,0 bar) · 200 m³/h · 100% autónoma' },
+            },
+            svg: {
+              off: ['grid', 'pciElec', 'iga', 'igaDown', 'coupling', 'normal'],
+              standby: [],
+              flows: ['geAts', 'atsEss', 'busEss', 'essSai', 'busSai', 'p603'],
+              gridPill: { bg: '#64748B', txt: 'RED EXTERIOR CAÍDA (0 V · APAGÓN)' },
+              trafoBadge: { bg: '#F1F5F9', bd: '#CBD5E1', fg: '#64748B', txt: '0,0 % (SIN RED)' },
+              igaOpen: false,
+              igaBadge: { bg: '#F1F5F9', bd: '#CBD5E1', fg: '#64748B', txt: 'SIN TENSIÓN RED' },
+              atsPos: 'ge',
+              atsBadge: { bg: '#D97706', bd: '#B45309', fg: '#FFFFFF', txt: 'POS. II · GE-01' },
+              geBadge: { bg: '#D97706', bd: '#B45309', fg: '#FFFFFF', txt: 'ACTIVO · 64,3 %', pulse: true },
+              p601Badge: { bg: '#F1F5F9', bd: '#CBD5E1', fg: '#64748B', txt: 'SIN TENSIÓN (0 V)', pulse: false },
+              p603Badge: { bg: '#047857', bd: '#065F46', fg: '#FFFFFF', txt: 'EN MARCHA (DIÉSEL AUTÓNOMO)', pulse: true },
+            },
+          },
+        };
+
+        // =====================================================================
+        // FICHAS DE INSPECCIÓN AL HACER CLIC EN LOS 11 BLOQUES PRINCIPALES
+        // =====================================================================
+        const INSPECT_DATA = {
+          trafo: {
+            tag: 'SUB-01 · CABECERA MT / BT · SUBESTACIÓN PREFABRICADA',
+            title: 'SUB-01 · Transformador MT/BT · 400 kVA (Ecodiseño Tier 2)',
+            tone: '',
+            summary: 'Alojado en la Sala MT de la caseta prefabricada SUB-01 (6,0 × 4,0 × 3,0 m, tabique EI-120), reduce la acometida exterior de 20 kV a 400/230 V (50 Hz) bajo régimen TN-S. Su protección térmica integral (incluido escenario con P-601 aguas arriba del IGA) recae en el relé multifunción DGPT2 con disparo en celda MT.',
+            specs: [
+              ['Potencia nominal / Ecodiseño', '400 kVA · 20 kV / 400 V · Dyn11 · Tier 2 (P₀ ≤ 387 W, Pk ≤ 3,25 kW)'],
+              ['Intensidad nominal / Cortocircuito', 'In = 577,4 A · ucc = 4% · Icc barras BT = 13,88 kA · η = 99,34%'],
+              ['Demanda Operación Normal', '109,08 kW · 128,33 kVA (32,1% carga)'],
+              ['Demanda Escenario Incendio (+P-601)', '255,75 kW · 300,88 kVA (75,2% carga)'],
+              ['Caída de tensión arranque P-601', '5,94% en barras Trafo / 7,67% total en bornes motor (lím. ≤ 15%)'],
+              ['Protección AT / Térmica / Tierras', 'Celda MT con fusibles APR + relé DGPT2 + tierras AT/BT segregadas'],
+              ['Acometida BT (ACOM-TR)', 'RZ1-K (AS) 2×(3×1×185 + 1×95 + T95) · PE total 190 mm² (ITC-BT-19)'],
+            ],
+            norm: 'Normativa aplicable: RAT (RD 337/2014, ITC-RAT 07/09/13/14), Regl. UE 2019/1783 (Tier 2), UNE-EN 62271-202 y REBT ITC-BT-08/19.',
+          },
+          spd: {
+            tag: 'SUB-01 · PROTECCIÓN CONTRA SOBRETENSIONES (CABECERA CGBT)',
+            title: 'SPD-01 · Descargador Combinado Tipo 1+2 (Clase I+II · 4P)',
+            tone: '',
+            summary: 'Instalado en la cabecera del CGBT con dispositivo de desconexión coordinado y conexión de mínima longitud al embarrado de tierra TN-S para proteger los VFD, el rectificador de SAI-01, el PLC/DCS y la Central PCI.',
+            specs: [
+              ['Clasificación / Polos', 'SPD Tipo 1+2 (Clase I+II · ondas 10/350 µs y 8/20 µs) · 4 Polos'],
+              ['Nivel de protección residual (Up)', 'Up ≤ 1,5 kV'],
+              ['Coordinación / Vigilancia', 'Desconexión de respaldo coordinada + relé perman. en CGBT/ATS'],
+              ['Equipos críticos protegidos', 'VFD (P-101A/B, CT-201), SAI-01 (5 kVA), DCS/PLC y Central PCI'],
+            ],
+            norm: 'Normativa aplicable: REBT ITC-BT-23, Guía-BT-23 y serie UNE-EN 61643-11 / 61643-12.',
+          },
+          bat: {
+            tag: 'SUB-01 · COMPENSACIÓN DE ENERGÍA REACTIVA (NIVEL 2)',
+            title: 'BAT-01 · Batería Automática de Condensadores (40 kVAr)',
+            tone: '',
+            summary: 'Compensa la energía reactiva en operación normal para elevar el factor de potencia de 0,85 a ≥ 0,95 y eliminar recargos tarifarios, incorporando reactancias de rechazo al 7% frente a los armónicos generados por los variadores de frecuencia.',
+            specs: [
+              ['Potencia reactiva / Escalones', '40 kVAr (4 × 10 kVAr automáticos) · Qc requerida = 31,75 kVAr'],
+              ['Filtro de armónicos', 'Reactancias de rechazo al 7% (protección frente a VFD de S1/S2)'],
+              ['Intensidad / Cableado (L = 5 m)', 'In = 57,7 A · 1,50·In = 86,6 A (ITC-BT-44) → RZ1-K 3×25+T16 (Iz 121,9 A)'],
+              ['Protección de salida (QF-BAT)', 'MCCB 100 A · 3P · Icu ≥ 25 kA en Embarrado Normal (Nivel 2)'],
+            ],
+            norm: 'Normativa aplicable: REBT ITC-BT-44 (conductores ≥ 1,5·In), IEC 60831 y Circular CNMC 3/2020.',
+          },
+          p601: {
+            tag: 'NIVEL 0 · DERIVACIÓN PCI INDEPENDIENTE',
+            title: 'Bomba Eléctrica Principal PCI (P-601 · 132 kW)',
+            tone: 'tone-red',
+            summary: 'Bomba principal eléctrica del abastecimiento superior Tipo C (UNE 23500). Se deriva aguas arriba del IGA para permanecer en tensión incluso si los bomberos cortan el interruptor general de la fábrica.',
+            specs: [
+              ['Potencia nominal / eléctrica', '132 kW IEC (IE4) / 146,67 kW elec. (170,5 kVA · cos φ = 0,86)'],
+              ['Intensidad nominal / Hidráulica', 'In = 246,2 A (400 V 3F) · 200 m³/h @ 12 bar'],
+              ['Protección de cabecera (QF-PCI)', 'MCCB 400 A 3P solo magnético 14·In (≈ 3.446 A) · Sin disparo térmico'],
+              ['Cableado y dimensionamiento', 'SZ1-K (AS+) PH120 3×1×240+T120 · 1,15·In acometida / 1,25·In motor'],
+              ['Arranque y caída de tensión', 'Arranque suave (~3·In ≈ 739 A) · ΔU: 5,94% barras / 7,67% total motor'],
+              ['Mando y rotulación CGBT', 'PSL-611A/B (11,5 bar) · Parada manual · «NO DESCONECTAR EN INCENDIO»'],
+            ],
+            norm: 'Normativa aplicable: RIPCI (RD 513/2017), RSCIEI (RD 164/2025), UNE 23500:2021 (apdos. 6.4.13.2 y 6.5.4.3), UNE-EN 50362 / IEC 60331 y REBT ITC-BT-28/47.',
+          },
+          p603: {
+            tag: 'RESPALDO MECÁNICO 1+1 · UNE 23500 TIPO C',
+            title: 'Bomba Diésel Autónoma PCI (P-603 · 130–140 kW)',
+            tone: 'tone-green',
+            summary: 'Respaldo 100% autónomo e independiente de la red eléctrica y de GE-01. Garantiza la extinción completa (200 m³/h @ 12 bar) tanto ante fallo de P-601 como en caso de apagón total exterior.',
+            specs: [
+              ['Potencia mecánica / Hidráulica', '130–140 kW mec. · 200 m³/h @ 12 bar (100% redundante)'],
+              ['Autonomía energética', '100% autónoma por depósito de gasóleo + doble juego de baterías'],
+              ['Disparo de arranque', 'Presostatos mecánicos cableados PSL-613A/B a 11,0 bar'],
+              ['Servicios auxiliares (2,00 kW)', 'Alimentados desde Embarrado Esencial (2 cargadores + precalentador)'],
+              ['Relación con GE-01', 'Hace innecesario respaldar P-601 desde GE-01 (ahorro GE 350–400 kVA)'],
+            ],
+            norm: 'Normativa aplicable: UNE 23500:2021 Tabla 5 (Abastecimiento superior Tipo C: 1 eléctrica + 1 diésel al 100%).',
+          },
+          iga: {
+            tag: 'PROTECCIÓN GENERAL DEL CGBT (SUB-01)',
+            title: 'Interruptor General Automático (IGA · 400 A · 4P)',
+            tone: '',
+            summary: 'Interruptor tetrapolar de caja moldeada (MCCB) situado aguas abajo de la derivación PCI de P-601. Permite seccionar de forma segura los embarrados de proceso (Normal y enlace red al ATS) sin interrumpir nunca P-601.',
+            specs: [
+              ['Calibre / Polos / Poder de corte', 'MCCB 400 A (reg. 250–320 A) · 4P · Icu ≥ 25 kA (frente a Icc = 13,88 kA)'],
+              ['Ubicación topológica', 'Aguas abajo de P-601 y aguas arriba de SPD-01, Normal y enlace ATS'],
+              ['Cargas bajo su protección', 'Embarrado Normal (44,78 kW + BAT-01) + enlace Q-ACOP al ATS (64,30 kW)'],
+              ['Comportamiento en corte bomberos', 'Desenergiza Normal (0 V); ATS transfiere Esencial a GE-01; P-601 sigue activa'],
+            ],
+            norm: 'Normativa aplicable: REBT ITC-BT-17 / ITC-BT-22, UNE-EN 60947-2 y coordinación obligatoria con UNE 23500:2021.',
+          },
+          ge: {
+            tag: 'GE-01 · FUENTE DE EMERGENCIA · ISO 8528',
+            title: 'GE-01 · Grupo Electrógeno Diésel Insonorizado (125 kVA PRP)',
+            tone: 'tone-amber',
+            summary: 'Emplazado sobre bancada exterior (3,5 × 2,0 m) anexa a SUB-01. Dimensionado para respaldar el Embarrado Esencial (64,30 kW / 80,38 kVA) en su franja óptima de carga (64,3% PRP) y absorber el arranque en rampa de C-401A (55 kW).',
+            specs: [
+              ['Potencia nominal ISO 8528', '125 kVA PRP (100 kW continuos) / 138 kVA ESP (emergencia)'],
+              ['Tensión / Clase / Protección', '400/230 V · 50 Hz · cos φ = 0,80 · Clase G2/G3 · QF-GE 250 A (reg. 200 A)'],
+              ['Carga operativa real', '64,30 kW / 80,38 kVA → 64,3% PRP (evita wet stacking)'],
+              ['Almacenamiento gasóleo (MI-IP03)', 'Depósito integrado en bancada de 500 L + cubeto 100% (≈ 28,8 h)'],
+              ['Tiempo de arranque / Alcance', '< 15 s automático · Respalda solo Embarrado Esencial (NO P-601)'],
+            ],
+            norm: 'Normativa aplicable: REBT ITC-BT-40, ITC-BT-18, ISO 8528-5 e ITC MI-IP03 (depósito Clase C ≤ 1.000 L).',
+          },
+          ats: {
+            tag: 'CONMUTACIÓN RED / GE-01 · ITC-BT-40',
+            title: 'Conmutador de Transferencia Automática (ATS · 250 A · 4P)',
+            tone: 'tone-amber',
+            summary: 'Dispositivo motorizado tetrapolar con enclavamiento mecánico y eléctrico que impide absolutamente el acoplamiento en paralelo entre la red exterior (SUB-01) y el grupo electrógeno GE-01.',
+            specs: [
+              ['Calibre / Configuración', '250 A · 4 Polos (corte omnipolar incluido neutro) · I / 0 / II'],
+              ['Tiempo de transferencia', '< 15 s desde detección de fallo de red o apertura del IGA'],
+              ['Seguridad de enclavamiento', 'Doble enclavamiento mecánico y eléctrico (prohíbe paralelo)'],
+              ['Secuencia de toma de carga', '1.º Cargas estáticas (SAI-01, Central PCI, aux.) → 2.º Rampa C-401A (+5–10 s)'],
+            ],
+            norm: 'Normativa aplicable: REBT ITC-BT-40 (enclavamiento obligatorio frente a retorno de tensión a red) y UNE-EN 60947-6-1.',
+          },
+          normal: {
+            tag: 'NIVEL 2 · SOLO RED EXTERIOR (400/230 V)',
+            title: 'Embarrado Normal — 6 Salidas de Proceso + BAT-01',
+            tone: '',
+            summary: 'Agrupa las cargas estándar de proceso que pueden detenerse de forma segura ante apagón o corte de bomberos, más la batería automática de condensadores BAT-01 (40 kVAr).',
+            specs: [
+              ['Total Embarrado Normal', '96,34 kW instalados / 44,78 kW demandados (+ BAT-01 40 kVAr)'],
+              ['S1 · Captación', '26,05 kW inst. / 10,98 kW dem. (P-101A/B 1+1 VFD, FL-101, LV-101)'],
+              ['S2 · Enfriamiento (Rev. 3)', '49,54 kW inst. / 24,48 kW dem. (P-201A/B 1+1, CT-201 VFD, 3 válv.)'],
+              ['S3 · Vapor (Caldera)', '10,95 kW inst. / 6,68 kW dem. (P-301A–D, BLR-301, BMS, 5 válv. fs=0,40)'],
+              ['S4 · Secadores (Normal)', '5,08 kW inst. / 2,50 kW dem. (DR-401A/B 1+1 + 4 purg.; opción N1 en detalle)'],
+              ['S5 · Dosificación / S6 · Jockey', 'S5: 0,28 / 0,14 kW (230 V) · S6 P-602: 4,44 kW inst. / 0,00 kW cont.'],
+            ],
+            norm: 'Normativa aplicable: REBT ITC-BT-19, ITC-BT-44, ITC-BT-47 (conductores a 1,25·In) y cables RZ1-K (AS).',
+          },
+          essential: {
+            tag: 'NIVEL 1 · RESPALDADO POR GE-01 125 kVA (400/230 V)',
+            title: 'Embarrado Esencial — 5 Servicios Críticos',
+            tone: 'tone-amber',
+            summary: 'Juego de barras físicamente segregado del Embarrado Normal y respaldado automáticamente mediante el ATS de 250 A y el Grupo Electrógeno GE-01 (125 kVA PRP).',
+            specs: [
+              ['Total Embarrado Esencial', '119,30 kW inst. / 64,30 kW dem. (80,38 kVA a cos φ = 0,80)'],
+              ['S4 · Compresores C-401A/B', '110,00 kW inst. / 55,00 kW dem. (1+1 enclavado · VFD/arranque suave)'],
+              ['S6 · Auxiliares P-603', '2,00 kW continuos (230 V 1F: 2 cargadores baterías + precalentador)'],
+              ['Central PCI (EN 54-4)', '0,30 kW (230 V 1F dedicado AS+ · baterías 24 h + 30 min · fuera de SAI-01)'],
+              ['Auxiliares SUB-01 y Emerg.', '2,50 kW (230 V 1F: alumbrado emerg. 33 uds, vent. Sala BT, tomas y reserva)'],
+              ['Entrada Rectificador SAI-01', '4,50 kW (230 V 1F: alimentación continua del Nivel 3 sin microcortes)'],
+            ],
+            norm: 'Normativa aplicable: REBT ITC-BT-28 (servicios de seguridad y alumbrado emergencia), ITC-BT-40, UNE 23007-14 y EN 54-4.',
+          },
+          sai: {
+            tag: 'SAI-01 · NIVEL 3 · ALIMENTACIÓN ININTERRUMPIDA 24 Vdc',
+            title: 'SAI-01 On-Line Doble Conversión (5 kVA / 4,5 kW → 24 Vdc)',
+            tone: 'tone-green',
+            summary: 'Garantiza continuidad absoluta (0 ms, clasificación VFI-SS-111) para toda la instrumentación crítica de campo S1–S6 y el armario DCS/PLC durante la conmutación Red/GE-01 (< 15 s) y ante cortes prolongados.',
+            specs: [
+              ['Potencia nominal / Entrada AC', '5 kVA / 4,50 kW (230 V 1F desde Nivel 1; 20,6 A máx. con recarga)'],
+              ['Carga real / diseño salida', '2,143 kW reales (47,6%) / 2,679 kW diseño con +25% margen (59,5%)'],
+              ['Instrumentación Campo S1–S6', '0,174 kW exactos (174 W · 7,25 A @ 24 Vdc: S1 49, S2 30, S3 60, S4 2, S5 13, S6 20 W)'],
+              ['Armario DCS / PLC y Comms.', '1,969 kW reales (2,46 kW diseño): PLC 0,90 + SCADA 0,70 + Comms 0,25 + pérd. 0,119 kW'],
+              ['Banco baterías y autonomía', '16 × 12 V / 12 Ah VRLA AGM (192 Vdc) → 47,5 min real / 38,0 min diseño'],
+              ['Independencia PCI (EN 54-4)', 'La Central PCI y los presostatos PSL-611/613 NO dependen de SAI-01'],
+            ],
+            norm: 'Normativa aplicable: IEC 62040-1/2/3 (VFI-SS-111), REBT ITC-BT-28/36 (MBTS 24 Vdc) y EN 54-4 / UNE 23500:2021.',
+          },
+        };
+
+        // =====================================================================
+        // ACTUALIZACIÓN VISUAL DEL ESCENARIO SELECCIONADO
+        // =====================================================================
+        function setKpi(target, data) {
+          target.card.className = 'kpi-card ' + data.tone;
+          target.val.textContent = data.val;
+          target.meta.textContent = data.meta;
+        }
+
+        function applyBadge(rectEl, textEl, cfg) {
+          rectEl.setAttribute('fill', cfg.bg);
+          rectEl.setAttribute('stroke', cfg.bd);
+          textEl.setAttribute('fill', cfg.fg);
+          textEl.textContent = cfg.txt;
+          rectEl.classList.toggle('pulse-badge', Boolean(cfg.pulse));
+          textEl.classList.toggle('pulse-badge', Boolean(cfg.pulse));
+        }
+
+        function applyScenario(key) {
+          const sc = SCENARIOS[key];
+          if (!sc) return;
+          activeScenario = key;
+
+          // 1. Botones activos
+          scenarioBtns.forEach((btn) => {
+            const isAct = btn.dataset.scenario === key;
+            btn.classList.toggle('active', isAct);
+            btn.setAttribute('aria-selected', isAct ? 'true' : 'false');
+          });
+
+          // 2. Telemetría (4 KPIs)
+          setKpi(kpiTrafo, sc.kpi.trafo);
+          setKpi(kpiSwitch, sc.kpi.sw);
+          setKpi(kpiGe, sc.kpi.ge);
+          setKpi(kpiPci, sc.kpi.pci);
+
+          // 3. Banner explicativo dinámico
+          bannerEl.className = 'scenario-banner ' + sc.tone;
+          bannerTitle.textContent = sc.title;
+          bannerDesc.textContent = sc.desc;
+          bannerNorms.innerHTML = sc.norms
+            .map((n) => `<span class="norm-pill">${n}</span>`)
+            .join('');
+
+          // 4. Estados visuales de ramas SVG (energizado / standby / apagado)
+          Object.entries(grp).forEach(([gKey, el]) => {
+            if (!el) return;
+            el.classList.remove('is-off', 'is-standby');
+            if (sc.svg.off.includes(gKey)) {
+              el.classList.add('is-off');
+            } else if (sc.svg.standby.includes(gKey)) {
+              el.classList.add('is-standby');
+            }
+          });
+
+          // 5. Flujos animados en líneas energizadas
+          Object.entries(flows).forEach(([fKey, el]) => {
+            if (!el) return;
+            el.classList.toggle('active', sc.svg.flows.includes(fKey));
+          });
+
+          // 6. Cabecera MT y badge de carga del Transformador
+          dyn.gridPillBg.setAttribute('fill', sc.svg.gridPill.bg);
+          dyn.gridPillTxt.textContent = sc.svg.gridPill.txt;
+          dyn.trafoBadgeBg.setAttribute('fill', sc.svg.trafoBadge.bg);
+          dyn.trafoBadgeBg.setAttribute('stroke', sc.svg.trafoBadge.bd);
+          dyn.trafoBadgeTxt.setAttribute('fill', sc.svg.trafoBadge.fg);
+          dyn.trafoBadgeTxt.textContent = sc.svg.trafoBadge.txt;
+
+          // 7. Símbolo dinámico del IGA (cuchilla abierta/cerrada)
+          if (sc.svg.igaOpen) {
+            dyn.igaBlade.setAttribute('transform', 'rotate(-36 500 335)');
+            dyn.igaBlade.setAttribute('stroke', '#DC2626');
+            dyn.igaCard.setAttribute('stroke', '#DC2626');
+          } else {
+            dyn.igaBlade.setAttribute('transform', 'rotate(0 500 335)');
+            dyn.igaBlade.setAttribute('stroke', key === 'blackout' ? '#94A3B8' : '#0F2A5F');
+            dyn.igaCard.setAttribute('stroke', '#BFDBFE');
+          }
+          dyn.igaBadgeBg.setAttribute('fill', sc.svg.igaBadge.bg);
+          dyn.igaBadgeBg.setAttribute('stroke', sc.svg.igaBadge.bd);
+          dyn.igaBadgeTxt.setAttribute('fill', sc.svg.igaBadge.fg);
+          dyn.igaBadgeTxt.textContent = sc.svg.igaBadge.txt;
+
+          // 8. Símbolo dinámico del ATS (Posición I Red vs Posición II GE-01)
+          if (sc.svg.atsPos === 'red') {
+            dyn.atsBlade.setAttribute('x2', '1058');
+            dyn.atsBlade.setAttribute('y2', '319');
+            dyn.atsBlade.setAttribute('stroke', '#1D4ED8');
+            dyn.lineAtsEss.setAttribute('stroke', '#D97706');
+          } else {
+            dyn.atsBlade.setAttribute('x2', '1262');
+            dyn.atsBlade.setAttribute('y2', '319');
+            dyn.atsBlade.setAttribute('stroke', '#D97706');
+            dyn.lineAtsEss.setAttribute('stroke', '#D97706');
+          }
+          dyn.atsBadgeBg.setAttribute('fill', sc.svg.atsBadge.bg);
+          dyn.atsBadgeBg.setAttribute('stroke', sc.svg.atsBadge.bd);
+          dyn.atsBadgeTxt.setAttribute('fill', sc.svg.atsBadge.fg);
+          dyn.atsBadgeTxt.textContent = sc.svg.atsBadge.txt;
+
+          // 9. Badges dinámicos GE-01, P-601 y P-603 (con pulso cuando están activos)
+          applyBadge(dyn.geBadgeBg, dyn.geBadgeTxt, sc.svg.geBadge);
+          applyBadge(dyn.p601BadgeBg, dyn.p601BadgeTxt, sc.svg.p601Badge);
+          applyBadge(dyn.p603BadgeBg, dyn.p603BadgeTxt, sc.svg.p603Badge);
+
+          dyn.p601Card.setAttribute('stroke-width', sc.svg.p601Badge.pulse ? '2.6' : '1.6');
+          dyn.p603Card.setAttribute('stroke-width', sc.svg.p603Badge.pulse ? '2.8' : '1.8');
+        }
+
+        scenarioBtns.forEach((btn) => {
+          btn.addEventListener('click', () => applyScenario(btn.dataset.scenario));
+        });
+
+        // =====================================================================
+        // MODAL DE INSPECCIÓN DE BLOQUES DEL SVG
+        // =====================================================================
+        const modalBackdrop = document.getElementById('inspect-modal');
+        const modalHeader = document.getElementById('modal-header');
+        const modalTag = document.getElementById('modal-tag');
+        const modalTitle = document.getElementById('modal-title');
+        const modalSummary = document.getElementById('modal-summary');
+        const modalTableBody = document.querySelector('#modal-table tbody');
+        const modalNorm = document.getElementById('modal-norm');
+        const modalCloseBtn = document.getElementById('modal-close');
+
+        function openInspector(id) {
+          const info = INSPECT_DATA[id];
+          if (!info) return;
+          modalHeader.className = 'modal-header ' + (info.tone || '');
+          modalTag.textContent = info.tag;
+          modalTitle.textContent = info.title;
+          modalSummary.textContent = info.summary;
+          modalTableBody.innerHTML = info.specs
+            .map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`)
+            .join('');
+          modalNorm.textContent = info.norm;
+          modalBackdrop.classList.add('open');
+        }
+
+        function closeInspector() {
+          modalBackdrop.classList.remove('open');
+        }
+
+        document.querySelectorAll('[data-inspect]').forEach((node) => {
+          node.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openInspector(node.getAttribute('data-inspect'));
+          });
+        });
+
+        modalCloseBtn.addEventListener('click', closeInspector);
+        modalBackdrop.addEventListener('click', (e) => {
+          if (e.target === modalBackdrop) closeInspector();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeInspector();
+        });
+
+        // =====================================================================
+        // TOAST Y EXPORTACIÓN VECTORIAL (SVG) / ALTA RESOLUCIÓN (PNG 2x) / PDF
+        // =====================================================================
+        const toastEl = document.getElementById('toast');
+        const toastText = document.getElementById('toast-text');
+        let toastTimer = null;
+
+        function showToast(msg) {
+          toastText.textContent = msg;
+          toastEl.classList.add('show');
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2800);
+        }
+
+        function getSerializedSvg() {
+          const clone = svgEl.cloneNode(true);
+          clone.setAttribute('width', '1460');
+          clone.setAttribute('height', '965');
+          // Elimina el pulso continuo en la instantánea manteniendo las líneas activas
+          clone.querySelectorAll('.pulse-badge').forEach((n) => n.classList.remove('pulse-badge'));
+          const serializer = new XMLSerializer();
+          let src = serializer.serializeToString(clone);
+          if (!/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/.test(src)) {
+            src = src.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+          }
+          return '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + src;
+        }
+
+        function scenarioFileSuffix() {
+          const map = {
+            normal: '1_Operacion_Normal',
+            fire: '2_Incendio_Red_Activa',
+            'fire-iga': '3_Incendio_Corte_IGA',
+            blackout: '4_Apagon_Total_Incendio',
+          };
+          return map[activeScenario] || 'General';
+        }
+
+        // Exportar SVG puro
+        document.getElementById('btn-export-svg').addEventListener('click', function () {
+          try {
+            const svgStr = getSerializedSvg();
+            const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Unifilar_SUB01_CGBT_${scenarioFileSuffix()}.svg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            showToast(`SVG vectorial descargado (${scenarioFileSuffix()})`);
+          } catch (err) {
+            showToast('No se pudo generar el archivo SVG.');
+            console.error(err);
+          }
+        });
+
+        // Exportar PNG alta resolución 2x (2920 × 1930 px) con fondo blanco sólido
+        document.getElementById('btn-export-png').addEventListener('click', function () {
+          try {
+            const svgStr = getSerializedSvg();
+            const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const img = new Image();
+
+            img.onload = function () {
+              try {
+                const scale = 2;
+                const canvas = document.createElement('canvas');
+                canvas.width = 1460 * scale;
+                canvas.height = 965 * scale;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.scale(scale, scale);
+                ctx.drawImage(img, 0, 0, 1460, 965);
+
+                canvas.toBlob(function (pngBlob) {
+                  if (!pngBlob) {
+                    showToast('Error al renderizar la imagen PNG.');
+                    return;
+                  }
+                  const pngUrl = URL.createObjectURL(pngBlob);
+                  const a = document.createElement('a');
+                  a.href = pngUrl;
+                  a.download = `Unifilar_SUB01_CGBT_${scenarioFileSuffix()}_2920px.png`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  setTimeout(() => URL.revokeObjectURL(pngUrl), 1000);
+                  showToast(`PNG 2x (2920×1930 px) descargado (${scenarioFileSuffix()})`);
+                }, 'image/png', 1.0);
+              } finally {
+                URL.revokeObjectURL(url);
+              }
+            };
+
+            img.onerror = function () {
+              URL.revokeObjectURL(url);
+              showToast('Error al convertir el esquema SVG a PNG.');
+            };
+
+            img.src = url;
+          } catch (err) {
+            showToast('Error inesperado al exportar el PNG.');
+            console.error(err);
+          }
+        });
+
+        // Imprimir / Guardar en PDF
+        document.getElementById('btn-print').addEventListener('click', function () {
+          window.print();
+        });
+
+        // Inicialización en Escenario 1 (Operación Normal)
+        applyScenario('normal');
+      } catch (err) {
+        console.error('Error al inicializar el simulador unifilar:', err);
+      }
+    })();
+  </script>
+</body>
+</html>
